@@ -18,6 +18,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private boolean checkUser(String login, String password){
+        if(login == null || password == null) return false;
+        return userService.checkUser(login,password);
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView index(@ModelAttribute("userJSP") User user) {
         ModelAndView modelAndView = new ModelAndView();
@@ -37,10 +42,8 @@ public class UserController {
         String userLogin = user.getLogin();
         String userPassword = user.getPassword();
         modelAndView.setViewName("error");
-        if(userLogin != null && userPassword != null){
-            if(userService.checkUser(userLogin,userPassword)){
-                modelAndView.setViewName("user");
-            }
+        if(checkUser(userLogin,userPassword)){
+            modelAndView.setViewName("user");
         }
         return modelAndView;
     }
@@ -49,7 +52,7 @@ public class UserController {
     public ModelAndView userSend(@RequestParam Map<String, String> requestParams, @ModelAttribute("userJSP") User user) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("user");
-        if(user.getLogin() == null){
+        if(!checkUser(user.getLogin(),user.getPassword())){
             modelAndView.setViewName("error");
             return modelAndView;
         }
@@ -64,7 +67,7 @@ public class UserController {
     public ModelAndView userQueueWithConverters(ModelMap modelMap, @ModelAttribute("userJSP") User user) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("view-queue");
-        if(user.getLogin() == null){
+        if(!checkUser(user.getLogin(),user.getPassword())){
             modelAndView.setViewName("error");
             return modelAndView;
         }
@@ -77,7 +80,7 @@ public class UserController {
     public ModelAndView userQueueWithoutConverters(ModelMap modelMap, @ModelAttribute("userJSP") User user) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("view-queue-two");
-        if(user.getLogin() == null){
+        if(!checkUser(user.getLogin(),user.getPassword())){
             modelAndView.setViewName("error");
             return modelAndView;
         }
@@ -90,7 +93,7 @@ public class UserController {
     public ModelAndView userInputData(ModelMap modelMap, @ModelAttribute("userJSP") User user) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("view-input");
-        if(user.getLogin() == null){
+        if(!checkUser(user.getLogin(),user.getPassword())){
             modelAndView.setViewName("error");
             return modelAndView;
         }
