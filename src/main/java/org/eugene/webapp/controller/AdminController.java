@@ -13,10 +13,14 @@ import java.util.Map;
 @Controller
 @SessionAttributes(value = "adminJSP")
 public class AdminController {
-    @Autowired
-    private AdminService adminService;
+    private final AdminService adminService;
     private final String password = "1";
     private String currentCommand = "";
+
+    @Autowired
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
+    }
 
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public ModelAndView adminInit(@ModelAttribute("adminJSP") Admin admin) {
@@ -28,6 +32,8 @@ public class AdminController {
 
     @ModelAttribute("adminJSP")
     public Admin createAdmin() {
+        adminService.setPathToDB("C:\\Users\\ED.Kosinov\\Documents\\MagistracyProjects\\programmable-server\\src\\main\\resources\\db");
+        adminService.setPathToScripts("C:\\Users\\ED.Kosinov\\Documents\\MagistracyProjects\\programmable-server\\src\\main\\resources\\scripts");
         return new Admin();
     }
 

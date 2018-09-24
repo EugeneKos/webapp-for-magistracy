@@ -15,8 +15,12 @@ import java.util.*;
 @Controller
 @SessionAttributes(value = "userJSP")
 public class UserController {
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     private boolean checkUser(String login, String password){
         if(login == null || password == null) return false;
