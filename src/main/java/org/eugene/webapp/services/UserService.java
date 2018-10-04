@@ -28,8 +28,4 @@ public class UserService {
     public void sendMessage(String userLogin, String mqttName, String topic, String content){
         userOperation.getUserByLogin(userLogin).sendMessage(mqttName,topic,content);
     }
-
-    public boolean checkUser(String userLogin, String password){
-        return userOperation.checkUser(userLogin,password);
-    }
 }

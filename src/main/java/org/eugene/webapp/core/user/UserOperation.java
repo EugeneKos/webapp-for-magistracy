@@ -66,11 +66,6 @@ public class UserOperation {
         }
     }
 
-    public boolean checkUser(String userLogin, String password){
-        User user = userMap.get(userLogin);
-        return user != null && user.getPassword().equals(password);
-    }
-
     public void saveUsers(){
         Map<String,UserDto> userDtoMap = new HashMap<>();
         for (String userLogin : userMap.keySet()){

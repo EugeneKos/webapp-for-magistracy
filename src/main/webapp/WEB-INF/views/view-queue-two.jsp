@@ -13,8 +13,9 @@
     <title>View Queue User Without Converters</title>
 </head>
 <body>
-    <form action="/user_send" method="post">
+    <form action="user" method="post">
         <input type="submit" value="Back">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
     <table>
         <tr><th>Mqtt Broker</th><th>Topic</th><th>Data without converters</th></tr>
