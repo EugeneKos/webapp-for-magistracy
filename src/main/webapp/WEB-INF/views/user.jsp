@@ -31,7 +31,7 @@
         <p><input type="submit" value="View queue without converters"></p>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
-    <form action="/" method="post">
+    <form action="main" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
         <input type="submit" value="Home Page">
     </form>

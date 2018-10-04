@@ -16,7 +16,18 @@
         <input type="submit" value="Execute">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
-    <form action="/" method="post">
+
+    <%
+        String resultCommand = (String) request.getAttribute("resultCommand");
+
+        if (resultCommand != null)
+        {
+            out.println("<h4 style=\"color:green\">"+resultCommand+"</h4>");
+        }
+
+    %>
+
+    <form action="main" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
         <input type="submit" value="Home Page">
     </form>

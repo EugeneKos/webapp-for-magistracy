@@ -40,12 +40,18 @@ public class MainController {
         return "index";
     }
 
+    @RequestMapping("/main")
+    public String mainPage() {
+        return "index";
+    }
+
     @RequestMapping(value = "/admin")
-    public ModelAndView adminControl(@RequestParam Map<String, String> requestParams) {
+    public ModelAndView adminControl(@RequestParam Map<String, String> requestParams, ModelMap modelMap) {
         String command = requestParams.get("command_text");
         if(command != null && !command.equals(currentCommand)){
             adminService.executeCommand(command);
             currentCommand = command;
+            modelMap.addAttribute("resultCommand","Ok");
         }
         return new ModelAndView("admin");
     }
