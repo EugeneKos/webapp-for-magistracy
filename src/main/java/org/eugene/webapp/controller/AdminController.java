@@ -1,6 +1,6 @@
 package org.eugene.webapp.controller;
 
-import org.eugene.server.services.AdminService;
+import org.eugene.webapp.services.AdminService;
 import org.eugene.webapp.model.Admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,8 +32,8 @@ public class AdminController {
 
     @ModelAttribute("adminJSP")
     public Admin createAdmin() {
-        adminService.setPathToDB("C:\\Users\\ED.Kosinov\\Documents\\MagistracyProjects\\programmable-server\\src\\main\\resources\\db");
-        adminService.setPathToScripts("C:\\Users\\ED.Kosinov\\Documents\\MagistracyProjects\\programmable-server\\src\\main\\resources\\scripts");
+        adminService.setPathToDB("C:\\Users\\ED.Kosinov\\Documents\\MagistracyProjects\\webapp-for-magistracy\\src\\main\\resources\\db");
+        adminService.setPathToScripts("C:\\Users\\ED.Kosinov\\Documents\\MagistracyProjects\\webapp-for-magistracy\\src\\main\\resources\\scripts");
         return new Admin();
     }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<script-creater>
+    <mqtt-name>name_2</mqtt-name>
+    <topic-name>Inwave/PLC/TcIotCommunicator/Json/Tx/Data</topic-name>
+    <data-for-format>{"Timestamp":"2018-09-19T03:01:16.298","GroupName":"Bouy","Values":{"Rope_Force1":0,"Rope_Force2":0,"Rope_Force3":0},"MetaData":{"Rope_Force1":{"iot.DisplayName":"Rope 1 Force","iot.Unit":"kgf","iot.ReadOnly":"true","iot.MinValue":"0","iot.MaxValue":"100"},"Rope_Force2":{"iot.DisplayName":"Rope 1 Force","iot.Unit":"kgf","iot.ReadOnly":"true","iot.MinValue":"0","iot.MaxValue":"100"},"Rope_Force3":{"iot.DisplayName":"Rope 1 Force","iot.Unit":"kgf","iot.ReadOnly":"true","iot.MinValue":"0","iot.MaxValue":"100"}}}</data-for-format>
+    <key-values>
+        <key>GroupName</key>
+        <begin-non-change-value>","GroupName":"</begin-non-change-value>
+        <final-non-change-value>","Values":\{"</final-non-change-value>
+    </key-values>
+   <!-- <key-values>
+        <key>nbrResulat</key>
+        <begin-non-change-value>baf":{"iot.DisplayName":"Recherche"},"nbrResulat":{</begin-non-change-value>
+        <final-non-change-value>},"Ref1":{"iot.DisplayName":"Reference 1"},"Ref2":{"iot.DisplayName":"Reference 2"},"R</final-non-change-value>
+    </key-values>-->
+</script-creater>

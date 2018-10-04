@@ -1,7 +1,7 @@
 package org.eugene.webapp.controller;
 
-import org.eugene.server.core.parsing.Data;
-import org.eugene.server.services.UserService;
+import org.eugene.webapp.core.parsing.Data;
+import org.eugene.webapp.services.UserService;
 import org.eugene.webapp.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
