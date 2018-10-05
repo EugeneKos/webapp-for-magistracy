@@ -45,11 +45,15 @@ public class MqttConnect {
             //Для подключения с именем пользователя и паролем.
             connOpts = setLogPass(connOpts,userName,password);
             System.out.println("User name: "+connOpts.getUserName());
+            addMessageIntoBuffer("User name: "+connOpts.getUserName());
             System.out.println("Password : "+ Arrays.toString(connOpts.getPassword()));
+            addMessageIntoBuffer("Password : "+ Arrays.toString(connOpts.getPassword()));
 
             System.out.println("Connecting to broker: "+broker);
+            addMessageIntoBuffer("Connecting to broker: "+broker);
             sampleClient.connect(connOpts);
             System.out.println("Connected");
+            addMessageIntoBuffer("Connected");
 
             autoSubscribe(setSubscribes);
 
@@ -104,6 +108,7 @@ public class MqttConnect {
             sampleClient.subscribe(topic,qos);
             setSubscribes.add(topic);
             System.out.println("Subscribe to: "+topic);
+            addMessageIntoBuffer("Subscribe to: "+topic);
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -114,6 +119,7 @@ public class MqttConnect {
             for (String topic : setSubscribes){
                 sampleClient.subscribe(topic,2);
                 System.out.println("Subscribe to: "+topic);
+                addMessageIntoBuffer("Subscribe to: "+topic);
             }
         } catch (MqttException e) {
             e.printStackTrace();
@@ -125,6 +131,7 @@ public class MqttConnect {
             sampleClient.unsubscribe(topicFilter);
             setSubscribes.removeAll(Arrays.asList(topicFilter));
             System.out.println("unsubscribe from: "+Arrays.toString(topicFilter));
+            addMessageIntoBuffer("unsubscribe from: "+Arrays.toString(topicFilter));
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -147,6 +154,7 @@ public class MqttConnect {
             sampleClient.disconnect();
             sampleClient.close();
             System.out.println("Disconnected");
+            addMessageIntoBuffer("Disconnected");
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -227,6 +235,20 @@ public class MqttConnect {
     @Override
     public int hashCode() {
         return Objects.hash(mqttName, broker, clientId);
+    }
+
+    public List<String> getMqttInfo(){
+        List<String> userInfo = new ArrayList<>();
+        userInfo.add("------------------------------------------------"+"\n");
+        userInfo.add("[Name connection: "+ mqttName +"]"+"\n");
+        userInfo.add("[Broker: "+broker+"]"+"\n");
+        userInfo.add("[Client Id: "+clientId+"]"+"\n");
+        userInfo.add("[Resolution print: "+resolutionPrint+"]"+"\n");
+        userInfo.add("[is Connected: "+isConnected()+"]"+"\n");
+        userInfo.add("[Users: "+ userNames +"]"+"\n");
+        userInfo.add("[Subscribes: "+setSubscribes+"]"+"\n");
+        userInfo.add("------------------------------------------------");
+        return userInfo;
     }
 
     public String toString(){

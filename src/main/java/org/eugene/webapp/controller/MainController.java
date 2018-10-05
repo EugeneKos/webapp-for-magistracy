@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -49,9 +50,9 @@ public class MainController {
     public ModelAndView adminControl(@RequestParam Map<String, String> requestParams, ModelMap modelMap) {
         String command = requestParams.get("command_text");
         if(command != null && !command.equals(currentCommand)){
-            adminService.executeCommand(command);
+            List<String> resultCommand = adminService.executeCommand(command);
             currentCommand = command;
-            modelMap.addAttribute("resultCommand","Ok");
+            modelMap.addAttribute("resultCommand",resultCommand);
         }
         return new ModelAndView("admin");
     }

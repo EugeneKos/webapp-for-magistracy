@@ -188,6 +188,21 @@ public class User {
         return Objects.hash(login);
     }
 
+    public List<String> getUserInfo(){
+        List<String> userInfo = new ArrayList<>();
+        userInfo.add("------------------------------------------------"+"\n");
+        userInfo.add("[Login: "+login+"]"+"\n");
+        userInfo.add("[Password: "+password+"]"+"\n");
+        userInfo.add("[Role: "+role+"]"+"\n");
+        userInfo.add("[Buffer size: "+bufferSize+"]"+"\n");
+        userInfo.add("[Resolution print queue: "+resolutionPrint+"]"+"\n");
+        userInfo.add("[Converters included: "+isConverters+"]"+"\n");
+        userInfo.add("[Converters: "+converters.keySet()+"]"+"\n");
+        userInfo.add("[Mqtt connects: "+ getMqttNames()+"]"+"\n");
+        userInfo.add("------------------------------------------------");
+        return userInfo;
+    }
+
     @Override
     public String toString() {
         return "------------------------------------------------"+"\n"+

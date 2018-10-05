@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: ED.Kosinov
   Date: 03.10.2018
@@ -18,11 +18,16 @@
     </form>
 
     <%
-        String resultCommand = (String) request.getAttribute("resultCommand");
+        List<String> resultCommand = null;
 
-        if (resultCommand != null)
-        {
-            out.println("<h4 style=\"color:green\">"+resultCommand+"</h4>");
+        if(request.getAttribute("resultCommand") instanceof List){
+            resultCommand = (List<String>) request.getAttribute("resultCommand");
+        }
+
+        if (resultCommand != null) {
+            for (String message : resultCommand){
+                out.println("<h4 style=\"color:green\">"+message+"</h4>");
+            }
         }
 
     %>

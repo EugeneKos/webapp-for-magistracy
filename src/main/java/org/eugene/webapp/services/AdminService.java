@@ -7,6 +7,8 @@ import org.eugene.webapp.core.save.WriterReaderFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AdminService {
     private final HandlerCommand handlerCommand;
@@ -18,8 +20,8 @@ public class AdminService {
         this.mqttConnectOperations = mqttConnectOperations;
     }
 
-    public void executeCommand(String command){
-        handlerCommand.handleCommand(command);
+    public List<String> executeCommand(String command){
+        return handlerCommand.handleCommand(command);
     }
 
     public void setPathToDB(String path){

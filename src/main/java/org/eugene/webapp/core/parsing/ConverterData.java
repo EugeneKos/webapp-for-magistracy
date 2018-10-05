@@ -1,6 +1,8 @@
 package org.eugene.webapp.core.parsing;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -107,6 +109,16 @@ public class ConverterData {
             info.append("[Key: ").append(keyValue.getKey()).append(" ---> Regexp: ").append(keyValue.getValue()).append("]").append(System.lineSeparator());
         }
         return info.toString();
+    }
+
+    public List<String> getConverterInfo(){
+        List<String> converterInfo = new ArrayList<>();
+        converterInfo.add("------------------------------------------------"+"\n");
+        converterInfo.add("[Mqtt name: "+mqttName+"]"+"\n");
+        converterInfo.add("[Topic name: "+topicName+"]"+"\n");
+        converterInfo.add(getKeyValueRegexpInfo());
+        converterInfo.add("------------------------------------------------");
+        return converterInfo;
     }
 
     @Override

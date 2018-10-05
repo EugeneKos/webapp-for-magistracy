@@ -6,6 +6,7 @@ import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
+import static org.eugene.webapp.core.printer.PrintInformation.addMessagesIntoBuffer;
 import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
 
 public class InfoUser extends TotalUserCom implements Command {
@@ -23,6 +24,7 @@ public class InfoUser extends TotalUserCom implements Command {
         User user = userOperation.getCurrentUser();
         if(user != null){
             System.out.println(user);
+            addMessagesIntoBuffer(user.getUserInfo());
         } else {
             printSystemInformation("current user not found !!!");
         }

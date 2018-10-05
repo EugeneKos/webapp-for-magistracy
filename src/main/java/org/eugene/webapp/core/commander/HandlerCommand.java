@@ -4,10 +4,11 @@ import org.eugene.webapp.core.command.Command;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.eugene.webapp.core.command.Commands.*;
-import static org.eugene.webapp.core.printer.PrintInformation.printCap;
-import static org.eugene.webapp.core.printer.PrintInformation.printFormatInformation;
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.printer.PrintInformation.*;
 
 @Component
 public class HandlerCommand {
@@ -18,9 +19,10 @@ public class HandlerCommand {
         this.controllerCommander = controllerCommander;
     }
 
-    public void handleCommand(String command){
+    public List<String> handleCommand(String command){
         parseComString(command);
         callCommand();
+        return getResultCommand();
     }
 
     private void callCommand() {
@@ -63,5 +65,11 @@ public class HandlerCommand {
 
     private boolean containsSection(String nameSection) {
         return controllerCommander.getSections().contains(nameSection);
+    }
+
+    private List<String> getResultCommand(){
+        List<String> messageBuffer = new ArrayList<>(getMessageBuffer());
+        clearMessageBuffer();
+        return messageBuffer;
     }
 }

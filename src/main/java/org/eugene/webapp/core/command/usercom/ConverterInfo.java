@@ -7,6 +7,7 @@ import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
+import static org.eugene.webapp.core.printer.PrintInformation.addMessagesIntoBuffer;
 import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
 
 public class ConverterInfo extends TotalUserCom implements Command {
@@ -27,6 +28,7 @@ public class ConverterInfo extends TotalUserCom implements Command {
                 ConverterData converterData = user.getConverters().get(arguments.get(0));
                 if (converterData != null) {
                     System.out.println(converterData);
+                    addMessagesIntoBuffer(converterData.getConverterInfo());
                     userOperation.setConverterData(converterData);
                 } else {
                     printSystemInformation("converter not found");
@@ -38,6 +40,7 @@ public class ConverterInfo extends TotalUserCom implements Command {
             ConverterData converterData = userOperation.getConverterData();
             if (converterData != null) {
                 System.out.println(converterData);
+                addMessagesIntoBuffer(converterData.getConverterInfo());
             } else {
                 printSystemInformation("converter not found");
             }
