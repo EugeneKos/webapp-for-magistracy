@@ -1,5 +1,6 @@
 package org.eugene.webapp.core.user;
 
+import org.eugene.webapp.core.device.Device;
 import org.eugene.webapp.core.mqtt.MqttConnect;
 import org.eugene.webapp.core.parsing.ConverterData;
 import org.eugene.webapp.core.parsing.Data;
@@ -17,6 +18,7 @@ public class User {
     private Map<String, ConverterData> converters = new HashMap<>();
     private LinkedList<Data> queueData = new LinkedList<>();
     private Map<String,Data> inputData = new HashMap<>();
+    private Set<Device> devices = new HashSet<>();
     private Object monitor = new Object();
     private boolean resolutionPrint = false;
     private boolean isConverters = true;
@@ -116,6 +118,50 @@ public class User {
 
     public Map<String, Data> getInputData(){
         return inputData;
+    }
+
+    public void addDevice(String deviceName, String deviceDescription, String mqttName, String topic){
+        for (MqttConnect mqttConnect : mqttConnects){
+            if(mqttConnect.getMqttName().equals(mqttName)){
+                devices.add(new Device(deviceName,deviceDescription,mqttConnect,topic));
+                printSystemInformation("device with name < "+deviceName+" > added");
+                return;
+            }
+        }
+        printSystemInformation("mqtt connect with name < "+mqttName+" > not found");
+        printSystemInformation("device not added");
+    }
+
+    public void removeDevice(String deviceName){
+        for (Device device : devices){
+            if(device.getName().equals(deviceName)){
+                devices.remove(device);
+                printSystemInformation("device with name < "+deviceName+" > removed");
+                return;
+            }
+        }
+        printSystemInformation("device with name < "+deviceName+" > not found");
+    }
+
+    public Device getDeviceByName(String deviceName){
+        for (Device device : devices){
+            if(device.getName().equals(deviceName)){
+                return device;
+            }
+        }
+        return null;
+    }
+
+    public Set<Device> getDevices() {
+        return devices;
+    }
+
+    public void sendMessage(String deviceName, String commandName, String... params) {
+        for (Device device : devices){
+            if(device.getName().equals(deviceName)){
+                device.sendMessage(commandName,params);
+            }
+        }
     }
 
     public void sendMessage(String mqttName, String topic, String content) {

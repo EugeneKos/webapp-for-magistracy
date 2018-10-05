@@ -21,7 +21,7 @@
         <tr><th>Mqtt Broker</th><th>Topic</th><th>Data with converters</th></tr>
         <c:forEach var="data" items="${inputData}">
             <tr>
-                <td><c:out value="${data.nameMqtt}"/></td>
+                <td><c:out value="${data.mqttName}"/></td>
                 <td><c:out value="${data.topicName}"/></td>
                 <td><c:out value="${data.keyValues}"/></td>
             </tr>

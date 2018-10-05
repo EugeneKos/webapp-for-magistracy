@@ -19,7 +19,7 @@ public class UserCommander extends Commander {
         addCommand(new AllUsers(userOperation));
         addCommand(new AddConverter(userOperation));
         addCommand(new RemoveConverter(userOperation));
-        addCommand(new InfoUser(userOperation));
+        addCommand(new UserInfo(userOperation));
         addCommand(new StopLoopPrint(userOperation));
         addCommand(new PrintQueue(userOperation));
         addCommand(new OnOffConverters(userOperation));
@@ -30,5 +30,10 @@ public class UserCommander extends Commander {
         addCommand(new ConverterInfo(userOperation));
         addCommand(new PrintParseDataConverter(userOperation));
         addCommand(new SetPathToScripts(userOperation));
+        addCommand(new AddDevice(userOperation));
+        addCommand(new RemoveDevice(userOperation));
+        addCommand(new AddCommandToDevice(userOperation));
+        addCommand(new RemoveCommandFromDevice(userOperation));
+        addCommand(new DeviceInfo(userOperation));
     }
 }

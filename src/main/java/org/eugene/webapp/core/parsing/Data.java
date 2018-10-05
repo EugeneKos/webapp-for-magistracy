@@ -3,20 +3,20 @@ package org.eugene.webapp.core.parsing;
 import java.util.Map;
 
 public class Data {
-    private final String nameMqtt;
+    private final String mqttName;
     private final String topicName;
     private final Map<String, String> keyValues;
     private final String message;
 
-    public Data(String nameMqtt, String topicName, Map<String, String> keyValues, String message) {
-        this.nameMqtt = nameMqtt;
+    public Data(String mqttName, String topicName, Map<String, String> keyValues, String message) {
+        this.mqttName = mqttName;
         this.topicName = topicName;
         this.keyValues = keyValues;
         this.message = message;
     }
 
-    public String getNameMqtt() {
-        return nameMqtt;
+    public String getMqttName() {
+        return mqttName;
     }
 
     public String getTopicName() {
@@ -33,7 +33,7 @@ public class Data {
 
     public String getDataWithConverters() {
         return "Data{" +
-                "nameMqtt='" + nameMqtt + '\'' +
+                "mqttName='" + mqttName + '\'' +
                 ", topicName='" + topicName + '\'' +
                 ", keyValues=" + keyValues +
                 '}';
@@ -41,7 +41,7 @@ public class Data {
 
     public String getDataWithoutConverters() {
         return "Data{" +
-                "nameMqtt='" + nameMqtt + '\'' +
+                "mqttName='" + mqttName + '\'' +
                 ", topicName='" + topicName + '\'' +
                 ", message='" + message + '\'' +
                 '}';
@@ -50,7 +50,7 @@ public class Data {
     @Override
     public String toString() {
         return "Data{" +
-                "nameMqtt='" + nameMqtt + '\'' +
+                "mqttName='" + mqttName + '\'' +
                 ", topicName='" + topicName + '\'' +
                 ", keyValues=" + keyValues +
                 ", message='" + message + '\'' +

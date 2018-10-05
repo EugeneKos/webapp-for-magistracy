@@ -58,8 +58,9 @@ public class MainController {
     }
 
     @RequestMapping(value = "/user")
-    public ModelAndView userSend(@RequestParam Map<String, String> requestParams) {
+    public ModelAndView userSend(@RequestParam Map<String, String> requestParams, ModelMap modelMap) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        modelMap.addAttribute("devices",userService.getDevices(authentication.getName()));
         String mqttBroker = requestParams.get("mqtt");
         String topic = requestParams.get("topic");
         String content = requestParams.get("content");
@@ -67,11 +68,22 @@ public class MainController {
         return new ModelAndView("user");
     }
 
+    @RequestMapping(value = "/user_device")
+    public ModelAndView userExecuteCommand(@RequestParam Map<String, String> requestParams, ModelMap modelMap) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        modelMap.addAttribute("devices",userService.getDevices(authentication.getName()));
+        String deviceName = requestParams.get("deviceName");
+        String commandName = requestParams.get("commandName");
+        String[] params = requestParams.get("params").split("\\s+");
+        userService.sendMessage(authentication.getName(),deviceName,commandName,params);
+        return new ModelAndView("user");
+    }
+
     @RequestMapping(value = "/user_view_queue")
     public ModelAndView userQueueWithConverters(ModelMap modelMap) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LinkedList<Data> queue = userService.qetQueueData(authentication.getName());
-        modelMap.put("queue",queue);
+        modelMap.addAttribute("queue",queue);
         return new ModelAndView("view-queue");
     }
 
@@ -79,7 +91,7 @@ public class MainController {
     public ModelAndView userQueueWithoutConverters(ModelMap modelMap) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LinkedList<Data> queue = userService.qetQueueData(authentication.getName());
-        modelMap.put("queue",queue);
+        modelMap.addAttribute("queue",queue);
         return new ModelAndView("view-queue-two");
     }
 
@@ -87,7 +99,7 @@ public class MainController {
     public ModelAndView userInputData(ModelMap modelMap) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<Data> inputData = userService.getInputData(authentication.getName());
-        modelMap.put("inputData",inputData);
+        modelMap.addAttribute("inputData",inputData);
         return new ModelAndView("view-input");
     }
 

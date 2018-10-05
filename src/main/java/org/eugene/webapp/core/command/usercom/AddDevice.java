@@ -1,42 +1,44 @@
 package org.eugene.webapp.core.command.usercom;
 
+import org.eugene.webapp.core.command.Command;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
-import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.addMessagesIntoBuffer;
 import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
 
-public class InfoUser extends TotalUserCom implements Command {
-    public InfoUser(UserOperation userOperation) {
+public class AddDevice extends TotalUserCom implements Command {
+    public AddDevice(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "info";
+        return "device-add";
     }
 
     @Override
     public void perform() {
         User user = userOperation.getCurrentUser();
         if(user != null){
-            System.out.println(user);
-            addMessagesIntoBuffer(user.getUserInfo());
+           user.addDevice(arguments.get(0),arguments.get(1),arguments.get(2),arguments.get(3));
         } else {
-            printSystemInformation("current user not found !!!");
+            printSystemInformation("user not found !!!");
         }
     }
 
     @Override
     public boolean checkArgs(List<String> arguments) {
-        return arguments.size() == 0;
+        if(arguments.size() == 4){
+            super.arguments = arguments;
+            return true;
+        }
+        return false;
     }
 
     @Override
     public String getDescriptionCommand() {
-        return "info []";
+        return "device-add [deviceName, deviceDescription, mqttName, topic]";
     }
 }
