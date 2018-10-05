@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<script-creater>
+    <mqtt-name>name_2</mqtt-name>
+    <topic-name>DevicesBAF/PC_Stock(Stock)/TcIotCommunicator/Json/Tx/Data</topic-name>
+    <data-for-format>{"Timestamp":"2018-09-16T08:16:41.582","GroupName":"PC_Stock(Stock)","Values":{"Referencebaf":"","nbrResulat":0,"Ref1":"","Ref2":"","Ref3":"","Ref4":"","Ref5":"","Ref6":"","Ref7":"","Ref8":"","Ref9":"","Ref10":""},"MetaData":{"Referencebaf":{"iot.DisplayName":"Recherche"},"nbrResulat":{"iot.DisplayName":"Nombre de resultat"},"Ref1":{"iot.DisplayName":"Reference 1"},"Ref2":{"iot.DisplayName":"Reference 2"},"Ref3":{"iot.DisplayName":"Reference 3"},"Ref4":{"iot.DisplayName":"Reference 4"},"Ref5":{"iot.DisplayName":"Reference 5"},"Ref6":{"iot.DisplayName":"Reference 6"},"Ref7":{"iot.DisplayName":"Reference 7"},"Ref8":{"iot.DisplayName":"Reference 8"},"Ref9":{"iot.DisplayName":"Reference 9"},"Ref10":{"iot.DisplayName":"Reference 10"}}}</data-for-format>
+    <key-values>
+        <key>Timestamp</key>
+        <begin-non-change-value>"Timestamp":"</begin-non-change-value>
+        <final-non-change-value>","GroupName":"PC</final-non-change-value>
+    </key-values>
+   <!-- <key-values>
+        <key>nbrResulat</key>
+        <begin-non-change-value>baf":{"iot.DisplayName":"Recherche"},"nbrResulat":{</begin-non-change-value>
+        <final-non-change-value>},"Ref1":{"iot.DisplayName":"Reference 1"},"Ref2":{"iot.DisplayName":"Reference 2"},"R</final-non-change-value>
+    </key-values>-->
+</script-creater>
