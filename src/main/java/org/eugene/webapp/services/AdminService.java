@@ -14,12 +14,10 @@ import java.util.List;
 @Service
 public class AdminService {
     private final HandlerCommand handlerCommand;
-    private final MqttConnectOperations mqttConnectOperations;
 
     @Autowired
-    public AdminService(HandlerCommand handlerCommand, MqttConnectOperations mqttConnectOperations) {
+    public AdminService(HandlerCommand handlerCommand) {
         this.handlerCommand = handlerCommand;
-        this.mqttConnectOperations = mqttConnectOperations;
     }
 
     public List<String> executeCommand(String command){
