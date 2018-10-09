@@ -43,8 +43,8 @@ public class DataFilter {
 
     private String convert(String key, String input){
         for (DataConverter dataConverter : converters){
-            if(dataConverter.getKey().equals(key) && dataConverter.isInputMatch(input)){
-                return dataConverter.getOutput();
+            if(dataConverter.getKey().equals(key) && dataConverter.isContains(input)){
+                input = dataConverter.getConvertValue(input);
             }
         }
         return input;

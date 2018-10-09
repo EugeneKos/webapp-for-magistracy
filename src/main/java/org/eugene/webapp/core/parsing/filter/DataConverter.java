@@ -11,8 +11,12 @@ public class DataConverter {
         this.output = output;
     }
 
-    public boolean isInputMatch(String input){
-        return this.input.equals(input);
+    public boolean isContains(String input){
+        return input.contains(this.input);
+    }
+
+    public String getConvertValue(String input){
+        return input.replace(this.input,this.output);
     }
 
     public String getKey() {

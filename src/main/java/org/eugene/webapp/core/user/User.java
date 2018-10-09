@@ -78,6 +78,7 @@ public class User {
         DataFilter dataFilter = null;
         if (filters.keySet().contains(filterName)) {
             dataFilter = filters.remove(filterName);
+            inputData.remove(filterName);
             printSystemInformation("filter with name < " + filterName + " > deleted");
         } else {
             printSystemInformation("filter with name < " + filterName + " > does not exist");
