@@ -8,7 +8,7 @@ import java.util.List;
 public class PrintInformation {
     private static List<String> messageBuffer = new ArrayList<>();
     private static LinkedList<String> operationBuffer = new LinkedList<>();
-    private static final int bufferSize = 500;
+    private static final int bufferSize = 1000;
 
     public static void addMessageIntoBuffer(String message){
         messageBuffer.add(message);

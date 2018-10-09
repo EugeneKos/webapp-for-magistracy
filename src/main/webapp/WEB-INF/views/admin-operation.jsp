@@ -9,7 +9,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <meta http-equiv="Refresh" content="2" />
     <title>Operation Page</title>
 </head>
 <body>
@@ -33,5 +32,9 @@
 
     %>
 
+    <form action="admin_operation" method="post">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        <input type="submit" value="Refresh">
+    </form>
 </body>
 </html>
