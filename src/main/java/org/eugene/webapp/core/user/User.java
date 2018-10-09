@@ -190,7 +190,9 @@ public class User {
     public void sendMessage(String mqttName, String topic, String content) {
         for (MqttConnect mqttConnect : mqttConnects) {
             if (mqttConnect.getMqttName().equals(mqttName)) {
-                mqttConnect.publishMessage(content, topic, 2);
+                if(mqttConnect.isConnected().equals("true")){
+                    mqttConnect.publishMessage(content, topic, 2);
+                }
             }
         }
     }

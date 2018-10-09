@@ -102,6 +102,7 @@ public class Device {
         deviceInfo.add("------------------------------------------------");
         deviceInfo.add("[Name: "+name+"]");
         deviceInfo.add("[Description: "+description+"]");
+        deviceInfo.add("[Mqtt Broker: "+mqttName+"]");
         deviceInfo.addAll(addCommandsInfoIntoList());
         deviceInfo.add("------------------------------------------------");
         return deviceInfo;
