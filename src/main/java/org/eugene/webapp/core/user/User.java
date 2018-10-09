@@ -1,9 +1,10 @@
 package org.eugene.webapp.core.user;
 
-import org.eugene.webapp.core.device.Device;
+import org.eugene.webapp.core.parsing.device.Device;
 import org.eugene.webapp.core.mqtt.MqttConnect;
-import org.eugene.webapp.core.parsing.ConverterData;
-import org.eugene.webapp.core.parsing.Data;
+import org.eugene.webapp.core.parsing.filter.DataFilter;
+import org.eugene.webapp.core.parsing.filter.Data;
+import org.eugene.webapp.core.printer.PrintInformation;
 
 import java.util.*;
 
@@ -15,13 +16,13 @@ public class User {
     private int bufferSize;
     private String role;
     private Set<MqttConnect> mqttConnects = new HashSet<>();
-    private Map<String, ConverterData> converters = new HashMap<>();
+    private Map<String, DataFilter> filters = new HashMap<>();
     private LinkedList<Data> queueData = new LinkedList<>();
     private Map<String,Data> inputData = new HashMap<>();
     private Set<Device> devices = new HashSet<>();
-    private Object monitor = new Object();
+    private final Object monitor = new Object();
     private boolean resolutionPrint = false;
-    private boolean isConverters = true;
+    private boolean isFilters = true;
     public static final String delimiter = "@";
 
     public User(String login, String password, String role, int bufferSize) {
@@ -58,30 +59,30 @@ public class User {
         this.resolutionPrint = resolutionPrint;
     }
 
-    public void setIsConverters(boolean isConverters) {
-        this.isConverters  = isConverters;
+    public void setIsFilters(boolean isFilters) {
+        this.isFilters = isFilters;
     }
 
-    public void addConverter(ConverterData converterData) {
-        String converterName = converterData.getMqttName()+delimiter+converterData.getTopicName();
-        if(!converters.keySet().contains(converterName)){
-            converters.put(converterName, converterData);
-            printSystemInformation("converter added");
+    public void addFilter(DataFilter dataFilter) {
+        String filterName = dataFilter.getMqttName()+delimiter+ dataFilter.getTopicName();
+        if(!filters.keySet().contains(filterName)){
+            filters.put(filterName, dataFilter);
+            printSystemInformation("filter added");
         } else {
-            printSystemInformation("converter with name < " + converterName + " > already exist");
+            printSystemInformation("filter with name < " + filterName + " > already exist");
         }
 
     }
 
-    public ConverterData removeConverter(String converterName) {
-        ConverterData converterData = null;
-        if (converters.keySet().contains(converterName)) {
-            converterData = converters.remove(converterName);
-            printSystemInformation("converter with name < " + converterName + " > deleted");
+    public DataFilter removeFilter(String filterName) {
+        DataFilter dataFilter = null;
+        if (filters.keySet().contains(filterName)) {
+            dataFilter = filters.remove(filterName);
+            printSystemInformation("filter with name < " + filterName + " > deleted");
         } else {
-            printSystemInformation("converter with name < " + converterName + " > does not exist");
+            printSystemInformation("filter with name < " + filterName + " > does not exist");
         }
-        return converterData;
+        return dataFilter;
     }
 
     public void addMqttConnect(MqttConnect mqttConnect) {
@@ -93,17 +94,17 @@ public class User {
     }
 
     public void addIntoQueue(String nameMqtt, String topic, String message) {
-        ConverterData converterData = converters.get(nameMqtt+delimiter+topic);
-        if (converterData != null) {
+        DataFilter dataFilter = filters.get(nameMqtt+delimiter+topic);
+        if (dataFilter != null) {
             synchronized (monitor) {
                 if (queueData.size() >= bufferSize) {
                     queueData.removeLast();
                 }
-                queueData.addFirst(converterData.convert(message));
+                queueData.addFirst(dataFilter.filter(message));
                 if(resolutionPrint){
                     showQueue();
                 }
-                inputData.put(nameMqtt+delimiter+topic, converterData.convert(message));
+                inputData.put(nameMqtt+delimiter+topic, dataFilter.filter(message));
             }
         }
     }
@@ -120,27 +121,33 @@ public class User {
         return inputData;
     }
 
-    public void addDevice(String deviceName, String deviceDescription, String mqttName, String topic){
+    public Device addDevice(String deviceName, String deviceDescription, String mqttName, String topic){
         for (MqttConnect mqttConnect : mqttConnects){
             if(mqttConnect.getMqttName().equals(mqttName)){
-                devices.add(new Device(deviceName,deviceDescription,mqttConnect,topic));
-                printSystemInformation("device with name < "+deviceName+" > added");
-                return;
+                Device device = new Device(deviceName,deviceDescription,mqttName,topic);
+                if(devices.add(device)){
+                    printSystemInformation("device with name < "+deviceName+" > added");
+                    return device;
+                } else {
+                    printSystemInformation("device with name < "+deviceName+" > already exist");
+                }
             }
         }
         printSystemInformation("mqtt connect with name < "+mqttName+" > not found");
         printSystemInformation("device not added");
+        return null;
     }
 
-    public void removeDevice(String deviceName){
+    public Device removeDevice(String deviceName){
         for (Device device : devices){
             if(device.getName().equals(deviceName)){
                 devices.remove(device);
                 printSystemInformation("device with name < "+deviceName+" > removed");
-                return;
+                return device;
             }
         }
         printSystemInformation("device with name < "+deviceName+" > not found");
+        return null;
     }
 
     public Device getDeviceByName(String deviceName){
@@ -156,10 +163,17 @@ public class User {
         return devices;
     }
 
+    public void setDevices(Set<Device> devices) {
+        this.devices = devices;
+    }
+
     public void sendMessage(String deviceName, String commandName, String... params) {
         for (Device device : devices){
             if(device.getName().equals(deviceName)){
-                device.sendMessage(commandName,params);
+                String commandTextForDevice = device.getCommandTextForDevice(commandName,params);
+                if(commandTextForDevice != null){
+                    sendMessage(device.getMqttName(),device.getTopic(),commandTextForDevice);
+                }
             }
         }
     }
@@ -175,18 +189,21 @@ public class User {
     private void showQueue(){
         int gapPage = 0;
         for (Data data : getQueueData()){
-            if(isConverters){
-                System.out.println(data.getDataWithConverters());
-                gapPage = data.getDataWithConverters().length();
+            if(isFilters){
+                System.out.println(data.getDataWithFilters());
+                PrintInformation.addMessageIntoOperationBuffer(data.getDataWithFilters());
+                gapPage = data.getDataWithFilters().length();
             } else {
-                System.out.println(data.getDataWithoutConverters());
-                gapPage = data.getDataWithoutConverters().length();
+                System.out.println(data.getDataWithoutFilters());
+                PrintInformation.addMessageIntoOperationBuffer(data.getDataWithoutFilters());
+                gapPage = data.getDataWithoutFilters().length();
             }
         }
         for (int i=0; i<gapPage; i++){
             System.out.print("-");
         }
         System.out.println();
+        PrintInformation.addMessageIntoOperationBuffer("-----------------------------------------------");
     }
 
     public String getLogin() {
@@ -205,20 +222,28 @@ public class User {
         return bufferSize;
     }
 
-    public Map<String, ConverterData> getConverters() {
-        return converters;
+    public Map<String, DataFilter> getFilters() {
+        return filters;
     }
 
-    public void setConverters(Map<String, ConverterData> converters) {
-        this.converters = converters;
+    public void setFilters(Map<String, DataFilter> filters) {
+        this.filters = filters;
     }
 
     private Set<String> getMqttNames() {
-        Set<String> namesMqtt = new HashSet<>();
+        Set<String> mqttNames = new HashSet<>();
         for (MqttConnect mqttConnect : mqttConnects) {
-            namesMqtt.add(mqttConnect.getMqttName());
+            mqttNames.add(mqttConnect.getMqttName());
         }
-        return namesMqtt;
+        return mqttNames;
+    }
+
+    private Set<String> getDeviceNames() {
+        Set<String> deviceNames = new HashSet<>();
+        for (Device device : devices) {
+            deviceNames.add(device.getName());
+        }
+        return deviceNames;
     }
 
     @Override
@@ -236,30 +261,32 @@ public class User {
 
     public List<String> getUserInfo(){
         List<String> userInfo = new ArrayList<>();
-        userInfo.add("------------------------------------------------"+"\n");
-        userInfo.add("[Login: "+login+"]"+"\n");
-        userInfo.add("[Password: "+password+"]"+"\n");
-        userInfo.add("[Role: "+role+"]"+"\n");
-        userInfo.add("[Buffer size: "+bufferSize+"]"+"\n");
-        userInfo.add("[Resolution print queue: "+resolutionPrint+"]"+"\n");
-        userInfo.add("[Converters included: "+isConverters+"]"+"\n");
-        userInfo.add("[Converters: "+converters.keySet()+"]"+"\n");
-        userInfo.add("[Mqtt connects: "+ getMqttNames()+"]"+"\n");
+        userInfo.add("------------------------------------------------");
+        userInfo.add("[Login: "+login+"]");
+        userInfo.add("[Password: "+password+"]");
+        userInfo.add("[Role: "+role+"]");
+        userInfo.add("[Buffer size: "+bufferSize+"]");
+        userInfo.add("[Resolution print queue: "+resolutionPrint+"]");
+        userInfo.add("[Filters included: "+ isFilters +"]");
+        userInfo.add("[Filters: "+ filters.keySet()+"]");
+        userInfo.add("[Devices: "+ getDeviceNames()+"]");
+        userInfo.add("[Mqtt connects: "+ getMqttNames()+"]");
         userInfo.add("------------------------------------------------");
         return userInfo;
     }
 
     @Override
     public String toString() {
-        return "------------------------------------------------"+"\n"+
-                "[Login: "+login+"]"+"\n"+
-                "[Password: "+password+"]"+"\n"+
-                "[Role: "+role+"]"+"\n"+
-                "[Buffer size: "+bufferSize+"]"+"\n"+
-                "[Resolution print queue: "+resolutionPrint+"]"+"\n"+
-                "[Converters included: "+isConverters+"]"+"\n"+
-                "[Converters: "+converters.keySet()+"]"+"\n"+
-                "[Mqtt connects: "+ getMqttNames()+"]"+"\n"+
+        return "------------------------------------------------"+System.lineSeparator()+
+                "[Login: "+login+"]"+System.lineSeparator()+
+                "[Password: "+password+"]"+System.lineSeparator()+
+                "[Role: "+role+"]"+System.lineSeparator()+
+                "[Buffer size: "+bufferSize+"]"+System.lineSeparator()+
+                "[Resolution print queue: "+resolutionPrint+"]"+System.lineSeparator()+
+                "[Filters included: "+ isFilters +"]"+System.lineSeparator()+
+                "[Filters: "+ filters.keySet()+"]"+System.lineSeparator()+
+                "[Devices: "+ getDeviceNames()+"]"+System.lineSeparator()+
+                "[Mqtt connects: "+ getMqttNames()+"]"+System.lineSeparator()+
                 "------------------------------------------------";
     }
 }

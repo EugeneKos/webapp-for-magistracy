@@ -2,6 +2,7 @@ package org.eugene.webapp.core.mqtt;
 
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.eugene.webapp.core.printer.PrintInformation;
 import org.eugene.webapp.core.user.User;
 
 import java.util.*;
@@ -20,7 +21,7 @@ public class MqttConnect {
     private MqttClient sampleClient;
     private Set<User> users = new HashSet<>();
     private Set<String> userNames = new HashSet<>();
-    private Object monitor = new Object();
+    private final Object monitor = new Object();
 
     public MqttConnect(String mqttName, String broker, String clientId){
         this.mqttName = mqttName;
@@ -69,6 +70,7 @@ public class MqttConnect {
                     dispatch(topic,answerMqtt);
                     if(resolutionPrint){
                         System.out.println(topic +": "+ answerMqtt);
+                        PrintInformation.addMessageIntoOperationBuffer(topic +": "+ answerMqtt);
                     }
                 }
 
@@ -139,6 +141,7 @@ public class MqttConnect {
 
     public void publishMessage(String content, String topic, int qos){
         System.out.println("Publishing message: "+content);
+        addMessageIntoOperationBuffer("Publishing message: "+content);
         try {
             MqttMessage message = new MqttMessage(content.getBytes());
             message.setQos(qos);
@@ -147,6 +150,7 @@ public class MqttConnect {
             e.printStackTrace();
         }
         System.out.println("Message published");
+        addMessageIntoOperationBuffer("Message published");
     }
 
     public void closeMqtt(){
@@ -238,28 +242,28 @@ public class MqttConnect {
     }
 
     public List<String> getMqttInfo(){
-        List<String> userInfo = new ArrayList<>();
-        userInfo.add("------------------------------------------------"+"\n");
-        userInfo.add("[Name connection: "+ mqttName +"]"+"\n");
-        userInfo.add("[Broker: "+broker+"]"+"\n");
-        userInfo.add("[Client Id: "+clientId+"]"+"\n");
-        userInfo.add("[Resolution print: "+resolutionPrint+"]"+"\n");
-        userInfo.add("[is Connected: "+isConnected()+"]"+"\n");
-        userInfo.add("[Users: "+ userNames +"]"+"\n");
-        userInfo.add("[Subscribes: "+setSubscribes+"]"+"\n");
-        userInfo.add("------------------------------------------------");
-        return userInfo;
+        List<String> mqttInfo = new ArrayList<>();
+        mqttInfo.add("------------------------------------------------");
+        mqttInfo.add("[Name connection: "+ mqttName +"]");
+        mqttInfo.add("[Broker: "+broker+"]");
+        mqttInfo.add("[Client Id: "+clientId+"]");
+        mqttInfo.add("[Resolution print: "+resolutionPrint+"]");
+        mqttInfo.add("[is Connected: "+isConnected()+"]");
+        mqttInfo.add("[Users: "+ userNames +"]");
+        mqttInfo.add("[Subscribes: "+setSubscribes+"]");
+        mqttInfo.add("------------------------------------------------");
+        return mqttInfo;
     }
 
     public String toString(){
-        return "------------------------------------------------"+"\n"+
-                "[Name connection: "+ mqttName +"]"+"\n"+
-                "[Broker: "+broker+"]"+"\n"+
-                "[Client Id: "+clientId+"]"+"\n"+
-                "[Resolution print: "+resolutionPrint+"]"+"\n"+
-                "[is Connected: "+isConnected()+"]"+"\n"+
-                "[Users: "+ userNames +"]"+"\n"+
-                "[Subscribes: "+setSubscribes+"]"+"\n"+
+        return "------------------------------------------------"+System.lineSeparator()+
+                "[Name connection: "+ mqttName +"]"+System.lineSeparator()+
+                "[Broker: "+broker+"]"+System.lineSeparator()+
+                "[Client Id: "+clientId+"]"+System.lineSeparator()+
+                "[Resolution print: "+resolutionPrint+"]"+System.lineSeparator()+
+                "[is Connected: "+isConnected()+"]"+System.lineSeparator()+
+                "[Users: "+ userNames +"]"+System.lineSeparator()+
+                "[Subscribes: "+setSubscribes+"]"+System.lineSeparator()+
                 "------------------------------------------------";
     }
 

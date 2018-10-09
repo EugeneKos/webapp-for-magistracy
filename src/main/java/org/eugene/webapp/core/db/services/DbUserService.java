@@ -2,9 +2,11 @@ package org.eugene.webapp.core.db.services;
 
 import org.eugene.webapp.core.db.converters.UserConverterEntity;
 import org.eugene.webapp.core.db.dao.UserDao;
-import org.eugene.webapp.core.db.model.user.ConverterDataEntity;
+import org.eugene.webapp.core.db.model.user.DataFilterEntity;
+import org.eugene.webapp.core.db.model.user.DeviceEntity;
 import org.eugene.webapp.core.db.model.user.UserEntity;
-import org.eugene.webapp.core.parsing.ConverterData;
+import org.eugene.webapp.core.parsing.device.Device;
+import org.eugene.webapp.core.parsing.filter.DataFilter;
 import org.eugene.webapp.core.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,20 +49,37 @@ public class DbUserService {
         userDao.removeByLogin(login);
     }
 
-    public void addConverterDataAndUpdate(String userLogin, ConverterData converterData){
+    public void addDataFilterAndUpdate(String userLogin, DataFilter dataFilter){
         UserEntity userEntity = findByLogin(userLogin);
         if(userEntity == null) return;
-        ConverterDataEntity converterDataEntity = userConverterEntity.convertToConverterDataEntity(converterData,userEntity);
-        userEntity.addConverterDataEntity(converterDataEntity);
+        DataFilterEntity dataFilterEntity = userConverterEntity.convertToDataFilterEntity(dataFilter,userEntity);
+        userEntity.addDataFilterEntity(dataFilterEntity);
         userDao.update(userEntity);
     }
 
-    public void removeConverterDataAndUpdate(String userLogin, ConverterData converterData){
+    public void removeDataFilterAndUpdate(String userLogin, DataFilter dataFilter){
         UserEntity userEntity = findByLogin(userLogin);
         if(userEntity == null) return;
-        Long id = userEntity.getConverterDataEntityId(converterData.getMqttName(),converterData.getTopicName());
+        Long id = userEntity.getDataFilterEntityId(dataFilter.getMqttName(), dataFilter.getTopicName());
         if(id != null){
-            userDao.removeConverterById(id);
+            userDao.removeFilterById(id);
+        }
+    }
+
+    public void addDeviceAndUpdate(String userLogin, Device device){
+        UserEntity userEntity = findByLogin(userLogin);
+        if(userEntity == null) return;
+        DeviceEntity deviceEntity = userConverterEntity.convertToDeviceEntity(device,userEntity);
+        userEntity.addDeviceEntity(deviceEntity);
+        userDao.update(userEntity);
+    }
+
+    public void removeDeviceAndUpdate(String userLogin, Device device){
+        UserEntity userEntity = findByLogin(userLogin);
+        if(userEntity == null) return;
+        Long id = userEntity.getDeviceEntityId(device.getName());
+        if(id != null){
+           userDao.removeDeviceById(id);
         }
     }
 

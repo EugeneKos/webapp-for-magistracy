@@ -1,7 +1,6 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.device.Device;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 
@@ -9,35 +8,36 @@ import java.util.List;
 
 import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
 
-public class AddCommandToDevice extends TotalUserCom implements Command {
-    public AddCommandToDevice(UserOperation userOperation) {
+public class FiltersOnOff extends TotalUserCom implements Command {
+    public FiltersOnOff(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "device-com-add";
+        return "filters";
     }
 
     @Override
     public void perform() {
         User user = userOperation.getCurrentUser();
         if(user != null){
-            Device device = user.getDeviceByName(arguments.get(0));
-            if(device != null){
-                device.addControlCommand(arguments.get(1),arguments.get(2),arguments.get(3));
-                printSystemInformation("command added to device");
-            } else {
-                printSystemInformation("device with name < "+arguments.get(0)+" > not found");
+            if(arguments.get(0).equals("on")) {
+                user.setIsFilters(true);
+                printSystemInformation("filters included");
+            }
+            if(arguments.get(0).equals("off")) {
+                user.setIsFilters(false);
+                printSystemInformation("filters are disabled");
             }
         } else {
-            printSystemInformation("user not found !!!");
+            printSystemInformation("current user not found !!!");
         }
     }
 
     @Override
     public boolean checkArgs(List<String> arguments) {
-        if(arguments.size() == 4){
+        if(arguments.size() == 1){
             super.arguments = arguments;
             return true;
         }
@@ -46,6 +46,6 @@ public class AddCommandToDevice extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "device-com-add [deviceName, commandName, commandDescription, commandLine]";
+        return "filters [param on/off]";
     }
 }

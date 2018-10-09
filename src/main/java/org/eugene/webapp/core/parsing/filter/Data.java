@@ -1,4 +1,4 @@
-package org.eugene.webapp.core.parsing;
+package org.eugene.webapp.core.parsing.filter;
 
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public class Data {
         return message;
     }
 
-    public String getDataWithConverters() {
+    public String getDataWithFilters() {
         return "Data{" +
                 "mqttName='" + mqttName + '\'' +
                 ", topicName='" + topicName + '\'' +
@@ -39,7 +39,7 @@ public class Data {
                 '}';
     }
 
-    public String getDataWithoutConverters() {
+    public String getDataWithoutFilters() {
         return "Data{" +
                 "mqttName='" + mqttName + '\'' +
                 ", topicName='" + topicName + '\'' +

@@ -1,5 +1,5 @@
 <%@ page import="java.util.Set" %>
-<%@ page import="org.eugene.webapp.core.device.Device" %>
+<%@ page import="org.eugene.webapp.core.parsing.device.Device" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -29,21 +29,9 @@
         <p><input type="submit" value="Execute"></p>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
-    <%--<table>
-        <tr><th>Device Name</th><th>Description</th><th>Commands</th></tr>
-        <c:forEach var="device" items="${devices}">
-            <tr>
-                <td><c:out value="${device.name}"/></td>
-                <td><c:out value="${device.description}"/></td>
-                &lt;%&ndash;<td><c:out value="${device.commands}"/></td>&ndash;%&gt;
-            <c:forEach var="command" items="${device.commands}">
-                <td><c:out value="${command}"/></td>
-            </c:forEach>
-            </tr>
-        </c:forEach>
-    </table>--%>
 
     <%
+        out.println("<h3 style=\"color:black\">Devices</h3>");
         Set<Device> devices = null;
 
         if(request.getAttribute("devices") instanceof Set){
@@ -65,11 +53,11 @@
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
     <form action="user_view_queue" method="post">
-        <input type="submit" value="View queue with converters">
+        <input type="submit" value="View queue with filters">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
     <form action="user_view_queue_two" method="post">
-        <p><input type="submit" value="View queue without converters"></p>
+        <p><input type="submit" value="View queue without filters"></p>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
     <form action="main" method="post">

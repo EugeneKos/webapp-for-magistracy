@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<script-creater>
+    <device name="Tv" description="Телевизор на кухне"/>
+    <mqtt name="name_2" topic="DevicesBAF/PC_Stock(Stock)/TcIotCommunicator/Json/Tx/Data"/>
+    <command name="on">
+        <description>Команда включения телевизора</description>
+        <command-text>samsung_tv=on</command-text>
+    </command>
+
+    <command name="off">
+        <description>Команда выключения телевизора</description>
+        <command-text>samsung_tv=off</command-text>
+    </command>
+
+    <command name="change chanel" params=" {chanel num} ">
+        <description>Команда переключения канала с параметром канала</description>
+        <command-text>samsung_tv_chanel=--value</command-text>
+    </command>
+
+</script-creater>

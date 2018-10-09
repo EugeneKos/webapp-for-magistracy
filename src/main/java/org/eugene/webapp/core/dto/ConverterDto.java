@@ -25,7 +25,8 @@ public class ConverterDto {
 
     public User convertToUser(UserDto userDto){
         User user = new User(userDto.getLogin(),userDto.getPassword(),userDto.getRole(),userDto.getBufferSize());
-        user.setConverters(userDto.getConverters());
+        user.setFilters(userDto.getFilters());
+        user.setDevices(userDto.getDevices());
         return user;
     }
 
@@ -35,7 +36,8 @@ public class ConverterDto {
         userDto.setPassword(user.getPassword());
         userDto.setRole(user.getRole());
         userDto.setBufferSize(user.getBufferSize());
-        userDto.setConverters(user.getConverters());
+        userDto.setFilters(user.getFilters());
+        userDto.setDevices(user.getDevices());
         return userDto;
     }
 

@@ -1,36 +1,36 @@
 package org.eugene.webapp.core.command.usercom;
 
-import org.eugene.webapp.core.parsing.ConverterData;
+import org.eugene.webapp.core.parsing.filter.DataFilter;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.parsing.CreateConverterData.createConverter;
+import static org.eugene.webapp.core.parsing.ScriptCreator.createDataFilter;
 import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
 
-public class AddConverter extends TotalUserCom implements Command {
-    public AddConverter(UserOperation userOperation) {
+public class AddFilter extends TotalUserCom implements Command {
+    public AddFilter(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "converter-cr";
+        return "filter-cr";
     }
 
     @Override
     public void perform() {
         User user = userOperation.getCurrentUser();
         if(user != null){
-            ConverterData converterData = createConverter(arguments.get(0));
-            if(converterData != null){
-                user.addConverter(converterData);
+            DataFilter dataFilter = createDataFilter(arguments.get(0));
+            if(dataFilter != null){
+                user.addFilter(dataFilter);
                 userOperation.saveUsers();
-                userOperation.addConverterDataIntoDB(user.getLogin(),converterData);
+                userOperation.addDataFilterIntoDB(user.getLogin(), dataFilter);
             } else {
-                printSystemInformation("error creating the converter, the converter was not created");
+                printSystemInformation("error creating the filter, the filter was not created");
             }
         } else {
             printSystemInformation("user not found !!!");
@@ -48,6 +48,6 @@ public class AddConverter extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "converter-cr [file script name]";
+        return "filter-cr [file script name]";
     }
 }

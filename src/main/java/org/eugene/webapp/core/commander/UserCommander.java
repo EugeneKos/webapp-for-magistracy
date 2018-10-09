@@ -17,23 +17,21 @@ public class UserCommander extends Commander {
         addCommand(new RemoveUser(userOperation));
         addCommand(new SelectUser(userOperation));
         addCommand(new AllUsers(userOperation));
-        addCommand(new AddConverter(userOperation));
-        addCommand(new RemoveConverter(userOperation));
+        addCommand(new AddFilter(userOperation));
+        addCommand(new RemoveFilter(userOperation));
         addCommand(new UserInfo(userOperation));
         addCommand(new StopLoopPrint(userOperation));
         addCommand(new PrintQueue(userOperation));
-        addCommand(new OnOffConverters(userOperation));
+        addCommand(new FiltersOnOff(userOperation));
         addCommand(new SetBuffer(userOperation));
         addCommand(new PublishMessage(userOperation));
         addCommand(new SetPassword(userOperation));
         addCommand(new SetRole(userOperation));
-        addCommand(new ConverterInfo(userOperation));
-        addCommand(new PrintParseDataConverter(userOperation));
+        addCommand(new FilterInfo(userOperation));
+        addCommand(new PrintParseDataFilter(userOperation));
         addCommand(new SetPathToScripts(userOperation));
         addCommand(new AddDevice(userOperation));
         addCommand(new RemoveDevice(userOperation));
-        addCommand(new AddCommandToDevice(userOperation));
-        addCommand(new RemoveCommandFromDevice(userOperation));
         addCommand(new DeviceInfo(userOperation));
     }
 }

@@ -1,34 +1,31 @@
 package org.eugene.webapp.core.command.usercom;
 
-import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.device.Device;
+import org.eugene.webapp.core.parsing.filter.DataFilter;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
+import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
 import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
 
-public class RemoveCommandFromDevice extends TotalUserCom implements Command {
-    public RemoveCommandFromDevice(UserOperation userOperation) {
+public class RemoveFilter extends TotalUserCom implements Command {
+    public RemoveFilter(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "device-com-rm";
+        return "filter-rm";
     }
 
     @Override
     public void perform() {
         User user = userOperation.getCurrentUser();
         if(user != null){
-            Device device = user.getDeviceByName(arguments.get(0));
-            if(device != null){
-                device.removeControlCommand(arguments.get(1));
-            } else {
-                printSystemInformation("device with name < "+arguments.get(0)+" > not found");
-            }
+            DataFilter dataFilter = user.removeFilter(arguments.get(0));
+            userOperation.saveUsers();
+            userOperation.removeDataFilterFromDB(user.getLogin(), dataFilter);
         } else {
             printSystemInformation("user not found !!!");
         }
@@ -36,7 +33,7 @@ public class RemoveCommandFromDevice extends TotalUserCom implements Command {
 
     @Override
     public boolean checkArgs(List<String> arguments) {
-        if(arguments.size() == 2){
+        if(arguments.size() == 1){
             super.arguments = arguments;
             return true;
         }
@@ -45,6 +42,6 @@ public class RemoveCommandFromDevice extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "device-com-rm [deviceName, commandName]";
+        return "filter-rm [mqttName@topicName]";
     }
 }

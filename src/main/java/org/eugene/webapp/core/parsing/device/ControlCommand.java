@@ -1,31 +1,36 @@
-package org.eugene.webapp.core.device;
+package org.eugene.webapp.core.parsing.device;
 
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ControlCommand {
     private String name;
+    private String params;
     private String description;
-    private String commandLine;
+    private String commandText;
     private final String changeValueToken = "--value";
 
-    public ControlCommand(String name, String description, String commandLine) {
+    public ControlCommand(String name, String params, String description, String commandText) {
         this.name = name;
+        this.params = params;
         this.description = description;
-        this.commandLine = commandLine;
+        this.commandText = commandText;
     }
 
     public String getName() {
         return name;
     }
 
+    public String getParams() {
+        return params;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public String getCommandLine(){
-        return commandLine;
+    public String getCommandText(){
+        return commandText;
     }
 
     public void setChangesValue(String... params){
@@ -37,7 +42,7 @@ public class ControlCommand {
     private int getNumberChange(){
         int num = 0;
         Pattern pattern = Pattern.compile(changeValueToken);
-        Matcher matcher = pattern.matcher(commandLine);
+        Matcher matcher = pattern.matcher(commandText);
         while (matcher.find()){
             System.out.println(matcher.group());
             num++;
@@ -48,9 +53,9 @@ public class ControlCommand {
     private void replaceChangeValue(String[] params){
         int index = 0;
         Pattern pattern = Pattern.compile(changeValueToken);
-        Matcher matcher = pattern.matcher(commandLine);
+        Matcher matcher = pattern.matcher(commandText);
         while (matcher.find()){
-            commandLine = commandLine.replaceFirst(matcher.group(),params[index]);
+            commandText = commandText.replaceFirst(matcher.group(),params[index]);
             index++;
         }
     }
@@ -75,16 +80,7 @@ public class ControlCommand {
         return "DeviceCom{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", commandLine='" + commandLine + '\'' +
+                ", commandText='" + commandText + '\'' +
                 '}';
-    }
-
-    public static void main(String[] args) {
-        ControlCommand c = new ControlCommand("test","testDescription",
-                "dhfhsdk=   --valuesss; dsvsdsd=off; sdcvaluesdc= --value  ;");
-        c.setChangesValue("ss","2345");
-        System.out.println(c.getCommandLine());
-        String s = "23 456   dfdsa";
-        System.out.println(Arrays.toString(s.split("\\s+")));
     }
 }

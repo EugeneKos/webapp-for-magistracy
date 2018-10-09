@@ -1,6 +1,6 @@
 package org.eugene.webapp.controller;
 
-import org.eugene.webapp.core.parsing.Data;
+import org.eugene.webapp.core.parsing.filter.Data;
 import org.eugene.webapp.services.AdminService;
 import org.eugene.webapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +55,12 @@ public class MainController {
             modelMap.addAttribute("resultCommand",resultCommand);
         }
         return new ModelAndView("admin");
+    }
+
+    @RequestMapping(value = "/admin_operation")
+    public ModelAndView adminOperationControl(ModelMap modelMap) {
+        modelMap.addAttribute("listOperation",adminService.getOperationBuffer());
+        return new ModelAndView("admin-operation");
     }
 
     @RequestMapping(value = "/user")

@@ -1,6 +1,6 @@
 package org.eugene.webapp.core.command.usercom;
 
-import org.eugene.webapp.core.parsing.ConverterData;
+import org.eugene.webapp.core.parsing.filter.DataFilter;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 import org.eugene.webapp.core.command.Command;
@@ -24,9 +24,9 @@ public class StopLoopPrint extends TotalUserCom implements Command, StopPrintCom
         if(user != null){
             user.setResolutionPrint(false);
         }
-        ConverterData converterData = userOperation.getConverterData();
-        if(converterData != null){
-            converterData.setResolutionPrint(false);
+        DataFilter dataFilter = userOperation.getDataFilter();
+        if(dataFilter != null){
+            dataFilter.setResolutionPrint(false);
         }
     }
 
