@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -29,6 +30,10 @@ public class UserService {
 
     public Set<Device> getDevices(String userLogin){
         return userOperation.getUserByLogin(userLogin).getDevices();
+    }
+
+    public Map<String, String> getStatusMqttConnects(String userLogin){
+        return userOperation.getUserByLogin(userLogin).getStatusMqttConnects();
     }
 
     public void sendMessage(String userLogin, String mqttName, String topic, String content){

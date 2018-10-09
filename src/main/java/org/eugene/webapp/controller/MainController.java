@@ -109,6 +109,14 @@ public class MainController {
         return new ModelAndView("view-input");
     }
 
+    @RequestMapping(value = "/user_mqtt_status")
+    public ModelAndView userViewMqttConnectsStatus(ModelMap modelMap) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Map<String, String> mqttConnectsStatus = userService.getStatusMqttConnects(authentication.getName());
+        modelMap.addAttribute("mqttConnectsStatus",mqttConnectsStatus);
+        return new ModelAndView("view-mqtt-status");
+    }
+
     @RequestMapping("/logout")
     public String logout(ModelMap model) {
         Authentication authentication = SecurityContextHolder.getContext()

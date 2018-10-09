@@ -9,8 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <meta http-equiv="Refresh" content="2" />
-    <title>View Input Data</title>
+    <title>Mqtt Connect Status</title>
 </head>
 <body>
     <form action="user" method="post">
@@ -18,15 +17,12 @@
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
     <table>
-        <tr><th>Mqtt Broker</th><th>Key</th><th>Value</th></tr>
-        <c:forEach var="data" items="${inputData}">
-            <c:forEach var="key" items="${data.keyValues.keySet()}">
-                <tr>
-                    <td><c:out value="${data.mqttName}"/></td>
-                    <td><c:out value="${key}"/></td>
-                    <td><c:out value="${data.keyValues.get(key)}"/></td>
-                </tr>
-            </c:forEach>
+        <tr><th>Mqtt Broker</th><th>Connect Status</th></tr>
+        <c:forEach var="mqttName" items="${mqttConnectsStatus.keySet()}">
+            <tr>
+                <td><c:out value="${mqttName}"/></td>
+                <td><c:out value="${mqttConnectsStatus.get(mqttName)}"/></td>
+            </tr>
         </c:forEach>
     </table>
 </body>

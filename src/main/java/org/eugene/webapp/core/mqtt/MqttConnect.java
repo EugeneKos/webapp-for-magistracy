@@ -219,7 +219,7 @@ public class MqttConnect {
         this.setSubscribes = setSubscribes;
     }
 
-    private String isConnected(){
+    public String isConnected(){
         if(sampleClient != null){
             return ""+sampleClient.isConnected();
         }

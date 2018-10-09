@@ -122,6 +122,14 @@ public class User {
         return inputData;
     }
 
+    public Map<String, String> getStatusMqttConnects(){
+        Map<String, String> statusMqttConnects = new HashMap<>();
+        for (MqttConnect mqttConnect : mqttConnects){
+            statusMqttConnects.put(mqttConnect.getMqttName(),mqttConnect.isConnected());
+        }
+        return statusMqttConnects;
+    }
+
     public Device addDevice(String deviceName, String deviceDescription, String mqttName, String topic){
         for (MqttConnect mqttConnect : mqttConnects){
             if(mqttConnect.getMqttName().equals(mqttName)){

@@ -52,6 +52,10 @@
         <p><input type="submit" value="View input data"></p>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
+    <form action="user_mqtt_status" method="post">
+        <p><input type="submit" value="View Mqtt status"></p>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+    </form>
     <form action="user_view_queue" method="post">
         <input type="submit" value="View queue with filters">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
