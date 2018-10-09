@@ -1,16 +1,20 @@
 package org.eugene.webapp.core.dto;
 
-import org.eugene.webapp.core.parsing.ConverterData;
+import org.eugene.webapp.core.parsing.device.Device;
+import org.eugene.webapp.core.parsing.filter.DataFilter;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class UserDto {
     private String login;
     private String password;
     private String role;
     private int bufferSize;
-    private Map<String,ConverterData> converters = new HashMap<>();
+    private Map<String,DataFilter> filters = new HashMap<>();
+    private Set<Device> devices = new HashSet<>();
 
     public String getLogin() {
         return login;
@@ -44,11 +48,19 @@ public class UserDto {
         this.bufferSize = bufferSize;
     }
 
-    public Map<String, ConverterData> getConverters() {
-        return converters;
+    public Map<String, DataFilter> getFilters() {
+        return filters;
     }
 
-    public void setConverters(Map<String, ConverterData> converters) {
-        this.converters = converters;
+    public void setFilters(Map<String, DataFilter> filters) {
+        this.filters = filters;
+    }
+
+    public Set<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(Set<Device> devices) {
+        this.devices = devices;
     }
 }

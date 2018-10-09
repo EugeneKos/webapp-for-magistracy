@@ -19,7 +19,9 @@ public class UserEntity {
     @Column(name = "buffer")
     private Integer bufferSize;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userEntity")
-    private Set<ConverterDataEntity> converters;
+    private Set<DataFilterEntity> filters;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userEntity")
+    private Set<DeviceEntity> devices;
 
     public Long getId() {
         return id;
@@ -61,25 +63,46 @@ public class UserEntity {
         this.bufferSize = bufferSize;
     }
 
-    public void addConverterDataEntity(ConverterDataEntity converterDataEntity){
-        converters.add(converterDataEntity);
+    public void addDataFilterEntity(DataFilterEntity dataFilterEntity){
+        filters.add(dataFilterEntity);
     }
 
-    public Long getConverterDataEntityId(String mqttName, String topicName){
-        for (ConverterDataEntity converterDataEntity : converters){
-            if(converterDataEntity.getMqttName().equals(mqttName) &&
-                    converterDataEntity.getTopicName().equals(topicName)){
-                return converterDataEntity.getId();
+    public Long getDataFilterEntityId(String mqttName, String topicName){
+        for (DataFilterEntity dataFilterEntity : filters){
+            if(dataFilterEntity.getMqttName().equals(mqttName) &&
+                    dataFilterEntity.getTopicName().equals(topicName)){
+                return dataFilterEntity.getId();
             }
         }
         return null;
     }
 
-    public Set<ConverterDataEntity> getConverters() {
-        return converters;
+    public Set<DataFilterEntity> getFilters() {
+        return filters;
     }
 
-    public void setConverters(Set<ConverterDataEntity> converters) {
-        this.converters = converters;
+    public void setFilters(Set<DataFilterEntity> filters) {
+        this.filters = filters;
+    }
+
+    public void addDeviceEntity(DeviceEntity deviceEntity){
+        devices.add(deviceEntity);
+    }
+
+    public Long getDeviceEntityId(String deviceName){
+        for (DeviceEntity deviceEntity : devices){
+            if(deviceEntity.getName().equals(deviceName)){
+                return deviceEntity.getId();
+            }
+        }
+        return null;
+    }
+
+    public Set<DeviceEntity> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(Set<DeviceEntity> devices) {
+        this.devices = devices;
     }
 }

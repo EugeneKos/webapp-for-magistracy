@@ -1,31 +1,34 @@
 package org.eugene.webapp.core.command.usercom;
 
-import org.eugene.webapp.core.parsing.ConverterData;
+import org.eugene.webapp.core.command.Command;
+import org.eugene.webapp.core.parsing.device.Device;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
-import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
+import static org.eugene.webapp.core.printer.PrintInformation.addMessagesIntoBuffer;
 import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
 
-public class RemoveConverter extends TotalUserCom implements Command {
-    public RemoveConverter(UserOperation userOperation) {
+public class DeviceInfo extends TotalUserCom implements Command {
+    public DeviceInfo(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "converter-rm";
+        return "device-info";
     }
 
     @Override
     public void perform() {
         User user = userOperation.getCurrentUser();
         if(user != null){
-            ConverterData converterData = user.removeConverter(arguments.get(0));
-            userOperation.saveUsers();
-            userOperation.removeConverterDataFromDB(user.getLogin(),converterData);
+            Device device = user.getDeviceByName(arguments.get(0));
+            if(device != null){
+                System.out.println(device);
+                addMessagesIntoBuffer(device.getDeviceInfo());
+            }
         } else {
             printSystemInformation("user not found !!!");
         }
@@ -42,6 +45,6 @@ public class RemoveConverter extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "converter-rm [mqttName@topicName]";
+        return "device-info [deviceName]";
     }
 }

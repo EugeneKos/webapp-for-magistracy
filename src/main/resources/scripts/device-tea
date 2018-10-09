@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<script-creater>
+    <device name="tea" description="Чайник"/>
+    <mqtt name="name_2" topic="DevicesBAF/PC_Stock(Stock)/TcIotCommunicator/Json/Tx/Data"/>
+    <command name="on">
+        <description>Команда включения чайника</description>
+        <command-text>tea_siemens=on</command-text>
+    </command>
+
+    <command name="off">
+        <description>Команда выключения чайник</description>
+        <command-text>tea_siemens=off</command-text>
+    </command>
+
+    <command name="tea temp timer" params=" {time}{temp} ">
+        <description>Команда таймера чайника с временным параметром и параметром температуры воды</description>
+        <command-text>
+            tea_siemens_timer=--value
+            tea_siemens_temp=--value
+        </command-text>
+    </command>
+
+</script-creater>

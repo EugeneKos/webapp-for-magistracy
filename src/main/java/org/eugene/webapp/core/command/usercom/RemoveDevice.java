@@ -1,6 +1,7 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
+import org.eugene.webapp.core.parsing.device.Device;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 
@@ -8,30 +9,25 @@ import java.util.List;
 
 import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
 
-public class OnOffConverters extends TotalUserCom implements Command {
-    public OnOffConverters(UserOperation userOperation) {
+public class RemoveDevice extends TotalUserCom implements Command {
+    public RemoveDevice(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "converters";
+        return "device-rm";
     }
 
     @Override
     public void perform() {
         User user = userOperation.getCurrentUser();
         if(user != null){
-            if(arguments.get(0).equals("on")) {
-                user.setIsConverters(true);
-                printSystemInformation("converters included");
-            }
-            if(arguments.get(0).equals("off")) {
-                user.setIsConverters(false);
-                printSystemInformation("converters are disabled");
-            }
+            Device device = user.removeDevice(arguments.get(0));
+            userOperation.saveUsers();
+            userOperation.removeDeviceFromDB(user.getLogin(),device);
         } else {
-            printSystemInformation("current user not found !!!");
+            printSystemInformation("user not found !!!");
         }
     }
 
@@ -46,6 +42,6 @@ public class OnOffConverters extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "converters [param on/off]";
+        return "device-rm [deviceName]";
     }
 }

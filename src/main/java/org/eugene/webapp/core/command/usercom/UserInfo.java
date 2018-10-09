@@ -1,42 +1,42 @@
 package org.eugene.webapp.core.command.usercom;
 
-import org.eugene.webapp.core.parsing.filter.DataFilter;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.command.StopPrintCommand;
 
 import java.util.List;
 
-public class StopLoopPrint extends TotalUserCom implements Command, StopPrintCommand {
-    public StopLoopPrint(UserOperation userOperation) {
+import static org.eugene.webapp.core.printer.PrintInformation.addMessagesIntoBuffer;
+import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+
+public class UserInfo extends TotalUserCom implements Command {
+    public UserInfo(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "stop.loop.print";
+        return "info";
     }
 
     @Override
     public void perform() {
         User user = userOperation.getCurrentUser();
         if(user != null){
-            user.setResolutionPrint(false);
-        }
-        DataFilter dataFilter = userOperation.getDataFilter();
-        if(dataFilter != null){
-            dataFilter.setResolutionPrint(false);
+            System.out.println(user);
+            addMessagesIntoBuffer(user.getUserInfo());
+        } else {
+            printSystemInformation("current user not found !!!");
         }
     }
 
     @Override
     public boolean checkArgs(List<String> arguments) {
-        return true;
+        return arguments.size() == 0;
     }
 
     @Override
     public String getDescriptionCommand() {
-        return null;
+        return "info []";
     }
 }

@@ -2,13 +2,17 @@ package org.eugene.webapp.core.printer;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class PrintInformation {
     private static List<String> messageBuffer = new ArrayList<>();
+    private static LinkedList<String> operationBuffer = new LinkedList<>();
+    private static final int bufferSize = 500;
 
     public static void addMessageIntoBuffer(String message){
         messageBuffer.add(message);
+        addMessageIntoOperationBuffer(message);
     }
 
     public static void addMessagesIntoBuffer(List<String> messages){
@@ -17,6 +21,21 @@ public class PrintInformation {
 
     public static List<String> getMessageBuffer(){
         return messageBuffer;
+    }
+
+    public static void addMessageIntoOperationBuffer(String message){
+        if(operationBuffer.size() >= bufferSize){
+            operationBuffer.removeLast();
+        }
+        operationBuffer.addFirst(message);
+    }
+
+    public static LinkedList<String> getOperationBuffer(){
+        LinkedList<String> inverseOperationBuffer = new LinkedList<>();
+        for (String operation : operationBuffer){
+            inverseOperationBuffer.addFirst(operation);
+        }
+        return inverseOperationBuffer;
     }
 
     public static void clearMessageBuffer(){

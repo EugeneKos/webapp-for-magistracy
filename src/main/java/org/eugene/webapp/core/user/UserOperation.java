@@ -5,7 +5,8 @@ import org.eugene.webapp.core.db.services.DbUserService;
 import org.eugene.webapp.core.dto.ConverterDto;
 import org.eugene.webapp.core.dto.UserDto;
 import org.eugene.webapp.core.mqtt.MqttConnect;
-import org.eugene.webapp.core.parsing.ConverterData;
+import org.eugene.webapp.core.parsing.device.Device;
+import org.eugene.webapp.core.parsing.filter.DataFilter;
 import org.eugene.webapp.core.save.WriterReaderFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ import static org.eugene.webapp.core.printer.PrintInformation.*;
 public class UserOperation {
     private Map<String,User> userMap = new HashMap<>();
     private User currentUser;
-    private ConverterData converterData;
+    private DataFilter dataFilter;
     private final ConverterDto converterDto;
     private final DbUserService dbUserService;
 
@@ -116,13 +117,22 @@ public class UserOperation {
         dbUserService.easyUpdate(currentUser);
     }
 
-    public void addConverterDataIntoDB(String userLogin, ConverterData converterData){
-        dbUserService.addConverterDataAndUpdate(userLogin,converterData);
+    public void addDataFilterIntoDB(String userLogin, DataFilter dataFilter){
+        dbUserService.addDataFilterAndUpdate(userLogin, dataFilter);
     }
 
-    public void removeConverterDataFromDB(String userLogin, ConverterData converterData){
-        if(converterData == null) return;
-        dbUserService.removeConverterDataAndUpdate(userLogin,converterData);
+    public void removeDataFilterFromDB(String userLogin, DataFilter dataFilter){
+        if(dataFilter == null) return;
+        dbUserService.removeDataFilterAndUpdate(userLogin, dataFilter);
+    }
+
+    public void addDeviceIntoDB(String userLogin, Device device){
+        dbUserService.addDeviceAndUpdate(userLogin,device);
+    }
+
+    public void removeDeviceFromDB(String userLogin, Device device){
+        if(device == null) return;
+        dbUserService.removeDeviceAndUpdate(userLogin,device);
     }
 
     //-------------------------------------------------------------------------------
@@ -133,12 +143,12 @@ public class UserOperation {
         }
     }
 
-    public void setConverterData(ConverterData converterData) {
-        this.converterData = converterData;
+    public void setDataFilter(DataFilter dataFilter) {
+        this.dataFilter = dataFilter;
     }
 
-    public ConverterData getConverterData() {
-        return converterData;
+    public DataFilter getDataFilter() {
+        return dataFilter;
     }
 
     public User getCurrentUser(){

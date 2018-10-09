@@ -10,7 +10,7 @@
 <html>
 <head>
     <meta http-equiv="Refresh" content="2" />
-    <title>View Queue User With Converters</title>
+    <title>View Queue User With Filters</title>
 </head>
 <body>
     <form action="user" method="post">
@@ -18,10 +18,10 @@
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
     <table>
-        <tr><th>Mqtt Broker</th><th>Topic</th><th>Data with converters</th></tr>
+        <tr><th>Mqtt Broker</th><th>Topic</th><th>Data with filters</th></tr>
         <c:forEach var="data" items="${queue}">
             <tr>
-                <td><c:out value="${data.nameMqtt}"/></td>
+                <td><c:out value="${data.mqttName}"/></td>
                 <td><c:out value="${data.topicName}"/></td>
                 <td><c:out value="${data.keyValues}"/></td>
             </tr>

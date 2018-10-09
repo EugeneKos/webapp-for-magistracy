@@ -14,7 +14,7 @@ public class KeyValueRegexpEntity {
     @Column(name = "value")
     private String value;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private ConverterDataEntity converterDataEntity;
+    private DataFilterEntity dataFilterEntity;
 
     public Long getId() {
         return id;
@@ -40,11 +40,11 @@ public class KeyValueRegexpEntity {
         this.value = value;
     }
 
-    public ConverterDataEntity getConverterDataEntity() {
-        return converterDataEntity;
+    public DataFilterEntity getDataFilterEntity() {
+        return dataFilterEntity;
     }
 
-    public void setConverterDataEntity(ConverterDataEntity converterDataEntity) {
-        this.converterDataEntity = converterDataEntity;
+    public void setDataFilterEntity(DataFilterEntity dataFilterEntity) {
+        this.dataFilterEntity = dataFilterEntity;
     }
 }

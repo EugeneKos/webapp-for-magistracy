@@ -32,6 +32,11 @@
 
     %>
 
+    <form action="admin_operation" method="post">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        <input type="submit" value="View Operations">
+    </form>
+
     <form action="main" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
         <input type="submit" value="Home Page">

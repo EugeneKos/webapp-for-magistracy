@@ -1,6 +1,7 @@
 package org.eugene.webapp.core.db.dao;
 
-import org.eugene.webapp.core.db.model.user.ConverterDataEntity;
+import org.eugene.webapp.core.db.model.user.DataFilterEntity;
+import org.eugene.webapp.core.db.model.user.DeviceEntity;
 import org.eugene.webapp.core.db.model.user.UserEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,10 +50,18 @@ public class UserDao {
     }
 
     @Transactional
-    public void removeConverterById(Long id){
-        ConverterDataEntity converterDataEntity = entityManager.find(ConverterDataEntity.class, id);
-        if(converterDataEntity != null){
-            entityManager.remove(converterDataEntity);
+    public void removeFilterById(Long id){
+        DataFilterEntity dataFilterEntity = entityManager.find(DataFilterEntity.class, id);
+        if(dataFilterEntity != null){
+            entityManager.remove(dataFilterEntity);
+        }
+    }
+
+    @Transactional
+    public void removeDeviceById(Long id){
+        DeviceEntity deviceEntity = entityManager.find(DeviceEntity.class, id);
+        if(deviceEntity != null){
+            entityManager.remove(deviceEntity);
         }
     }
 

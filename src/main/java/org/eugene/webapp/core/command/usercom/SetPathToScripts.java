@@ -1,7 +1,7 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.parsing.CreateConverterData;
+import org.eugene.webapp.core.parsing.ScriptCreator;
 import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
@@ -15,12 +15,12 @@ public class SetPathToScripts extends TotalUserCom implements Command {
 
     @Override
     public String getName() {
-        return "converter-path-scripts";
+        return "scripts-path";
     }
 
     @Override
     public void perform() {
-        CreateConverterData.setPathToScripts(arguments.get(0));
+        ScriptCreator.setPathToScripts(arguments.get(0));
         printSystemInformation("change path to scripts: "+arguments.get(0));
     }
 
@@ -35,6 +35,6 @@ public class SetPathToScripts extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "converter-path-scripts [path to scripts]";
+        return "scripts-path [path to scripts]";
     }
 }

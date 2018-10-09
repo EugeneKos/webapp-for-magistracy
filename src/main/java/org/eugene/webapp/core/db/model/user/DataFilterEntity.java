@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "converters")
-public class ConverterDataEntity {
+@Table(name = "filters")
+public class DataFilterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
@@ -14,8 +14,10 @@ public class ConverterDataEntity {
     private String topicName;
     @Column(name = "mqtt_name")
     private String mqttName;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "converterDataEntity")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dataFilterEntity")
     private Set<KeyValueRegexpEntity> keyValueRegexp;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dataFilterEntity")
+    private Set<DataConverterEntity> converters;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserEntity userEntity;
 
@@ -51,6 +53,14 @@ public class ConverterDataEntity {
         this.keyValueRegexp = keyValueRegexp;
     }
 
+    public Set<DataConverterEntity> getConverters() {
+        return converters;
+    }
+
+    public void setConverters(Set<DataConverterEntity> converters) {
+        this.converters = converters;
+    }
+
     public UserEntity getUserEntity() {
         return userEntity;
     }
@@ -64,7 +74,7 @@ public class ConverterDataEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ConverterDataEntity that = (ConverterDataEntity) o;
+        DataFilterEntity that = (DataFilterEntity) o;
 
         if (topicName != null ? !topicName.equals(that.topicName) : that.topicName != null) return false;
         return mqttName != null ? mqttName.equals(that.mqttName) : that.mqttName == null;
