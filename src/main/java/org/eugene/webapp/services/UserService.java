@@ -24,9 +24,9 @@ public class UserService {
         return userOperation.getUserByLogin(userLogin).getQueueData();
     }
 
-    public Collection<Data> getInputData(String userLogin){
+    /*public Collection<Data> getInputData(String userLogin){
         return userOperation.getUserByLogin(userLogin).getInputData().values();
-    }
+    }*/
 
     public Set<Device> getDevices(String userLogin){
         return userOperation.getUserByLogin(userLogin).getDevices();

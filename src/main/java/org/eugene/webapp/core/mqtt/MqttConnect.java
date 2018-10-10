@@ -5,28 +5,53 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eugene.webapp.core.printer.PrintInformation;
 import org.eugene.webapp.core.user.User;
 
+import javax.persistence.*;
 import java.util.*;
 
 import static org.eugene.webapp.core.printer.PrintInformation.*;
 
+@Entity
+@Table(name = "mqtt_connects")
 public class MqttConnect {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+    @Column(name = "mqtt_name", unique = true)
     private String mqttName; // Имя mqtt подключения
+    @Column(name = "broker_name")
     private String broker; // = "tcp://iot.eclipse.org:1883"; // Сервер к которому я подключаюсь
+    @Column(name = "clientId")
     private String clientId; // = "JavaSample"; // Идентификатор клиента
+    @ManyToMany(mappedBy = "mqttConnects")
+    private Set<User> users;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "mqttConnect")
+    private Set<Subscribe> subscribes;
+
+    private MemoryPersistence persistence = new MemoryPersistence();
+    private MqttClient sampleClient;
+
     private String userName = null; // = Имя пользователя для подключения м авторизацией
     private String password = null; // = Пароль для подключения
     private boolean resolutionPrint = false;
-    private Set<String> setSubscribes = new HashSet<>();
-    private MemoryPersistence persistence = new MemoryPersistence();
-    private MqttClient sampleClient;
-    private Set<User> users = new HashSet<>();
-    private Set<String> userNames = new HashSet<>();
-    private final Object monitor = new Object();
+    /*private Set<String> setSubscribes = new HashSet<>();
+    private Set<String> userNames = new HashSet<>();*/
+    //private final Object monitor = new Object();
 
     public MqttConnect(String mqttName, String broker, String clientId){
         this.mqttName = mqttName;
         this.broker = broker;
         this.clientId = clientId;
+    }
+
+    public MqttConnect() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getMqttName(){
@@ -56,7 +81,7 @@ public class MqttConnect {
             System.out.println("Connected");
             addMessageIntoBuffer("Connected");
 
-            autoSubscribe(setSubscribes);
+            //autoSubscribe(setSubscribes);
 
             sampleClient.setCallback(new MqttCallback() {
                 @Override
@@ -108,7 +133,7 @@ public class MqttConnect {
     public void subscribe(String topic, int qos){
         try {
             sampleClient.subscribe(topic,qos);
-            setSubscribes.add(topic);
+            //setSubscribes.add(topic);
             System.out.println("Subscribe to: "+topic);
             addMessageIntoBuffer("Subscribe to: "+topic);
         } catch (MqttException e) {
@@ -131,7 +156,7 @@ public class MqttConnect {
     public void unsubscribe(String[] topicFilter){
         try {
             sampleClient.unsubscribe(topicFilter);
-            setSubscribes.removeAll(Arrays.asList(topicFilter));
+            //setSubscribes.removeAll(Arrays.asList(topicFilter));
             System.out.println("unsubscribe from: "+Arrays.toString(topicFilter));
             addMessageIntoBuffer("unsubscribe from: "+Arrays.toString(topicFilter));
         } catch (MqttException e) {
@@ -165,34 +190,34 @@ public class MqttConnect {
     }
 
     public void addUser(User user){
-        synchronized (monitor){
+        //synchronized (monitor){
             if(users.add(user)){
-                userNames.add(user.getLogin());
+                //userNames.add(user.getLogin());
                 user.addMqttConnect(this);
                 printSystemInformation("user < "+user.getLogin()+" > added in mqtt < "+ mqttName +" > data base");
             } else {
                 printSystemInformation("user < "+user.getLogin()+" > already exist in mqtt < "+ mqttName +" > data base");
             }
-        }
+       // }
     }
 
     public void removeUser(User user){
-        synchronized (monitor){
-            if(users.remove(user) && userNames.remove(user.getLogin())){
+        //synchronized (monitor){
+            if(users.remove(user) /*&& userNames.remove(user.getLogin())*/){
                 user.removeMqttConnect(this);
                 printSystemInformation("user < "+user.getLogin()+" > deleted from mqtt < "+ mqttName +" > data base");
             } else {
                 printSystemInformation("user < "+user.getLogin()+" > not found in mqtt < "+ mqttName +" > data base");
             }
-        }
+       // }
     }
 
     private void dispatch(String topic, String message){
-        synchronized (monitor){
+        //synchronized (monitor){
             for (User user : users){
                 user.addIntoQueue(mqttName,topic,message);
             }
-        }
+       // }
     }
 
     public String getBroker() {
@@ -203,7 +228,7 @@ public class MqttConnect {
         return clientId;
     }
 
-    public Set<String> getUserNames() {
+    /*public Set<String> getUserNames() {
         return userNames;
     }
 
@@ -217,7 +242,7 @@ public class MqttConnect {
 
     public void setSetSubscribes(Set<String> setSubscribes) {
         this.setSubscribes = setSubscribes;
-    }
+    }*/
 
     public String isConnected(){
         if(sampleClient != null){
@@ -249,8 +274,8 @@ public class MqttConnect {
         mqttInfo.add("[Client Id: "+clientId+"]");
         mqttInfo.add("[Resolution print: "+resolutionPrint+"]");
         mqttInfo.add("[is Connected: "+isConnected()+"]");
-        mqttInfo.add("[Users: "+ userNames +"]");
-        mqttInfo.add("[Subscribes: "+setSubscribes+"]");
+        //mqttInfo.add("[Users: "+ userNames +"]");
+        //mqttInfo.add("[Subscribes: "+setSubscribes+"]");
         mqttInfo.add("------------------------------------------------");
         return mqttInfo;
     }
@@ -262,8 +287,8 @@ public class MqttConnect {
                 "[Client Id: "+clientId+"]"+System.lineSeparator()+
                 "[Resolution print: "+resolutionPrint+"]"+System.lineSeparator()+
                 "[is Connected: "+isConnected()+"]"+System.lineSeparator()+
-                "[Users: "+ userNames +"]"+System.lineSeparator()+
-                "[Subscribes: "+setSubscribes+"]"+System.lineSeparator()+
+                //"[Users: "+ userNames +"]"+System.lineSeparator()+
+                //"[Subscribes: "+setSubscribes+"]"+System.lineSeparator()+
                 "------------------------------------------------";
     }
 

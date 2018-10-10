@@ -1,8 +1,8 @@
 package org.eugene.webapp.core.db.dao;
 
-import org.eugene.webapp.core.db.model.user.DataFilterEntity;
-import org.eugene.webapp.core.db.model.user.DeviceEntity;
-import org.eugene.webapp.core.db.model.user.UserEntity;
+import org.eugene.webapp.core.parsing.device.Device;
+import org.eugene.webapp.core.parsing.filter.DataFilter;
+import org.eugene.webapp.core.user.User;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,54 +19,54 @@ public class UserDao {
     private EntityManager entityManager;
 
     @Transactional
-    public void persist(UserEntity userEntity){
-        entityManager.persist(userEntity);
+    public void persist(User user){
+        entityManager.persist(user);
     }
 
     @Transactional
-    public void update(UserEntity userEntity) {
-        entityManager.merge(userEntity);
+    public void update(User user) {
+        entityManager.merge(user);
     }
 
     @Transactional
-    public UserEntity findByLogin(String login) {
-        UserEntity userEntity = null;
+    public User findByLogin(String login) {
+        User user = null;
         try {
-            userEntity = (UserEntity) entityManager.createQuery("SELECT p FROM UserEntity p WHERE p.login LIKE :login")
+            user = (User) entityManager.createQuery("SELECT p FROM User p WHERE p.login LIKE :login")
                     .setParameter("login",login)
                     .getSingleResult();
         } catch (NoResultException e){
             System.err.println("No result");
         }
-        return userEntity;
+        return user;
     }
 
     @Transactional
     public void removeByLogin(String login) {
-        UserEntity userEntity = findByLogin(login);
-        if (userEntity != null) {
-            entityManager.remove(userEntity);
+        User user = findByLogin(login);
+        if (user != null) {
+            entityManager.remove(user);
         }
     }
 
     @Transactional
     public void removeFilterById(Long id){
-        DataFilterEntity dataFilterEntity = entityManager.find(DataFilterEntity.class, id);
-        if(dataFilterEntity != null){
-            entityManager.remove(dataFilterEntity);
+        DataFilter dataFilter = entityManager.find(DataFilter.class, id);
+        if(dataFilter != null){
+            entityManager.remove(dataFilter);
         }
     }
 
     @Transactional
     public void removeDeviceById(Long id){
-        DeviceEntity deviceEntity = entityManager.find(DeviceEntity.class, id);
-        if(deviceEntity != null){
-            entityManager.remove(deviceEntity);
+        Device device = entityManager.find(Device.class, id);
+        if(device != null){
+            entityManager.remove(device);
         }
     }
 
     @Transactional
-    public List<UserEntity> findAll() {
-        return entityManager.createQuery("SELECT p FROM UserEntity p").getResultList();
+    public List<User> findAll() {
+        return entityManager.createQuery("SELECT p FROM User p").getResultList();
     }
 }

@@ -23,7 +23,8 @@ public class SetRole extends TotalUserCom implements Command {
         User user = userOperation.getCurrentUser();
         if(user != null){
             user.setRole(arguments.get(0));
-            userOperation.easyUpdateIntoDB();
+            //userOperation.easyUpdateIntoDB();
+            userOperation.updateUser();
             printSystemInformation("role changed");
         } else {
             printSystemInformation("current user not found !!!");

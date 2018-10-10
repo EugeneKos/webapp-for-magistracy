@@ -25,7 +25,7 @@ public class FilterInfo extends TotalUserCom implements Command {
         if (arguments.size() == 1) {
             User user = userOperation.getCurrentUser();
             if (user != null) {
-                DataFilter dataFilter = user.getFilters().get(arguments.get(0));
+                DataFilter dataFilter = user.getFilterByName(arguments.get(0));
                 if (dataFilter != null) {
                     System.out.println(dataFilter);
                     addMessagesIntoBuffer(dataFilter.getFilterInfo());

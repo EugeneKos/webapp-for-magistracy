@@ -24,8 +24,8 @@ public class Subscribe extends TotalMqttCom implements Command {
         MqttConnect currentMqttConnect = mqttConnectOperations.getCurrentMqttConnect();
         if(currentMqttConnect != null){
             currentMqttConnect.subscribe(arguments.get(0),Integer.parseInt(arguments.get(1)));
-            mqttConnectOperations.saveMqttConnects();
-            mqttConnectOperations.addSubscribeIntoDB(currentMqttConnect.getMqttName(),arguments.get(0));
+            //mqttConnectOperations.addSubscribeIntoDB(currentMqttConnect.getMqttName(),arguments.get(0));
+            mqttConnectOperations.updateMqttConnect();
         } else {
             printSystemInformation("mqtt connection does not exist");
         }

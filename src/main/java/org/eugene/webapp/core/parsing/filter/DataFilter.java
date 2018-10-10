@@ -1,7 +1,9 @@
 package org.eugene.webapp.core.parsing.filter;
 
 import org.eugene.webapp.core.printer.PrintInformation;
+import org.eugene.webapp.core.user.User;
 
+import javax.persistence.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,21 +14,46 @@ import java.util.regex.Pattern;
  * данных от regexp второго Map.
  */
 
+@Entity
+@Table(name = "users")
 public class DataFilter {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "topic")
     private String topicName;
+    @Column(name = "mqtt_name")
     private String mqttName;
-    private Map<String,String> keyValueRegexp = new HashMap<>();
-    private Set<DataConverter> converters = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dataFilter")
+    private Set<KeyValueRegexp> keyValueRegexps;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dataFilter")
+    private Set<DataConverter> converters;
+    @ManyToMany(mappedBy = "filters")
+    private Set<User> users;
+
     private boolean resolutionPrint;
 
-    public DataFilter(String topicName, String mqttName){
+    public DataFilter(String name, String topicName, String mqttName){
+        this.name = name;
         this.topicName = topicName;
         this.mqttName = mqttName;
 
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void addKeyValueRegexp(String key, String value){
-        keyValueRegexp.put(key,value);
+        keyValueRegexps.add(new KeyValueRegexp(key,value));
+
     }
 
     public void addConverter(String key, String input, String output){
@@ -35,8 +62,8 @@ public class DataFilter {
 
     public Data filter(String dirtyData){
         HashMap<String,String> map = new HashMap<>();
-        for (String key : keyValueRegexp.keySet()){
-            map.put(key,convert(key, parse(dirtyData,keyValueRegexp.get(key))));
+        for (KeyValueRegexp keyValueRegexp : keyValueRegexps){
+            map.put(keyValueRegexp.getKey(),convert(keyValueRegexp.getKey(), parse(dirtyData,keyValueRegexp.getValue())));
         }
         return new Data(mqttName,topicName,map, dirtyData);
     }
@@ -84,6 +111,10 @@ public class DataFilter {
         this.resolutionPrint = resolutionPrint;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getMqttName(){
         return mqttName;
     }
@@ -92,12 +123,12 @@ public class DataFilter {
         return topicName;
     }
 
-    public Map<String, String> getKeyValueRegexp() {
-        return keyValueRegexp;
+    public Set<KeyValueRegexp> getKeyValueRegexps() {
+        return keyValueRegexps;
     }
 
-    public void setKeyValueRegexp(Map<String, String> keyValueRegexp) {
-        this.keyValueRegexp = keyValueRegexp;
+    public void setKeyValueRegexps(Set<KeyValueRegexp> keyValueRegexps) {
+        this.keyValueRegexps = keyValueRegexps;
     }
 
     public Set<DataConverter> getConverters() {
@@ -130,10 +161,12 @@ public class DataFilter {
 
     private String getKeyValueRegexpInfo(){
         StringBuilder info = new StringBuilder();
-        for(Map.Entry<String,String> keyValue : keyValueRegexp.entrySet()){
-            info.append("[Key: ").append(keyValue.getKey()).append(" ---> Regexp: ").append(keyValue.getValue()).append("]").append(System.lineSeparator());
+        for(KeyValueRegexp keyValueRegexp : keyValueRegexps){
+            info.append("[Key: ").append(keyValueRegexp.getKey()).append(" ---> Regexp: ").append(keyValueRegexp.getValue()).append("]").append(System.lineSeparator());
             for (DataConverter dataConverter : converters){
-                info.append("Converter: input: ").append(dataConverter.getInput()).append(" ---> output: ").append(dataConverter.getOutput()).append(System.lineSeparator());
+                if(dataConverter.getKey().equals(keyValueRegexp.getKey())){
+                    info.append("Converter: input: ").append(dataConverter.getInput()).append(" ---> output: ").append(dataConverter.getOutput()).append(System.lineSeparator());
+                }
             }
         }
         return info.toString();
@@ -141,10 +174,10 @@ public class DataFilter {
 
     private List<String> addKeyValueRegexpInfoIntoList(){
         List<String> filterInfo = new ArrayList<>();
-        for(Map.Entry<String,String> keyValue : keyValueRegexp.entrySet()){
-            filterInfo.add("[Key: "+keyValue.getKey()+" ---> Regexp: "+keyValue.getValue());
+        for(KeyValueRegexp keyValueRegexp : keyValueRegexps){
+            filterInfo.add("[Key: "+keyValueRegexp.getKey()+" ---> Regexp: "+keyValueRegexp.getValue());
             for (DataConverter dataConverter : converters){
-                if(dataConverter.getKey().equals(keyValue.getKey())){
+                if(dataConverter.getKey().equals(keyValueRegexp.getKey())){
                     filterInfo.add("Converter: input: "+dataConverter.getInput()+" ---> output: "+dataConverter.getOutput());
                 }
             }

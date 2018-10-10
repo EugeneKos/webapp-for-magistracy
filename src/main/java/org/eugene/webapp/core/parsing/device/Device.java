@@ -1,22 +1,47 @@
 package org.eugene.webapp.core.parsing.device;
 
+import org.eugene.webapp.core.user.User;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Entity
+@Table(name = "devices")
 public class Device {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "description")
     private String description;
+    @Column(name = "mqtt_name")
     private String mqttName;
+    @Column(name = "topic")
     private String topic;
-    private Set<ControlCommand> commands = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "device")
+    private Set<ControlCommand> commands;
+    @ManyToMany(mappedBy = "devices")
+    private Set<User> users;
+
 
     public Device(String name, String description, String mqttName, String topic) {
         this.name = name;
         this.description = description;
         this.mqttName = mqttName;
         this.topic = topic;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

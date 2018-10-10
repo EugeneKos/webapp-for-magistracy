@@ -72,10 +72,11 @@ public class ScriptCreator {
         Element mqtt = getElement(document.getElementsByTagName("mqtt"));
         String mqttName = mqtt.getAttribute("name");
         String topicName = mqtt.getAttribute("topic");
+        String name = getValueFromSimpleTag(document.getElementsByTagName("name"));
         String dataForFormat = getValueFromSimpleTag(document.getElementsByTagName("data-for-format"));
 
         if(mqttName != null && topicName != null && dataForFormat != null){
-            dataFilter = new DataFilter(topicName,mqttName);
+            dataFilter = new DataFilter(name,topicName,mqttName);
             dataFilter = setKeyValues(dataFilter, document.getElementsByTagName("key-values"), dataForFormat);
         }
         return dataFilter;

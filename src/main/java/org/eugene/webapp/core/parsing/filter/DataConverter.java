@@ -1,14 +1,35 @@
 package org.eugene.webapp.core.parsing.filter;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "converters")
 public class DataConverter {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+    @Column(name = "key")
     private String key;
+    @Column(name = "input")
     private String input;
+    @Column(name = "output")
     private String output;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private DataFilter dataFilter;
 
     public DataConverter(String key, String input, String output) {
         this.key = key;
         this.input = input;
         this.output = output;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public boolean isContains(String input){
@@ -29,6 +50,14 @@ public class DataConverter {
 
     public String getOutput(){
         return output;
+    }
+
+    public DataFilter getDataFilter() {
+        return dataFilter;
+    }
+
+    public void setDataFilter(DataFilter dataFilter) {
+        this.dataFilter = dataFilter;
     }
 
     @Override

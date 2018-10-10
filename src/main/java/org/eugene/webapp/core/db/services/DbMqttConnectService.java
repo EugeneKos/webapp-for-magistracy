@@ -1,10 +1,6 @@
 package org.eugene.webapp.core.db.services;
 
-import org.eugene.webapp.core.db.converters.MqttConnectConverterEntity;
 import org.eugene.webapp.core.db.dao.MqttConnectDao;
-import org.eugene.webapp.core.db.model.mqtt.MqttConnectEntity;
-import org.eugene.webapp.core.db.model.mqtt.SubscribeEntity;
-import org.eugene.webapp.core.db.model.mqtt.UserNameEntity;
 import org.eugene.webapp.core.mqtt.MqttConnect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,20 +12,21 @@ import java.util.Set;
 @Component
 public class DbMqttConnectService {
     private final MqttConnectDao mqttConnectDao;
-    private final MqttConnectConverterEntity mqttConnectConverterEntity;
 
     @Autowired
-    public DbMqttConnectService(MqttConnectDao mqttConnectDao, MqttConnectConverterEntity mqttConnectConverterEntity) {
+    public DbMqttConnectService(MqttConnectDao mqttConnectDao) {
         this.mqttConnectDao = mqttConnectDao;
-        this.mqttConnectConverterEntity = mqttConnectConverterEntity;
     }
 
     public void persist(MqttConnect mqttConnect){
-        MqttConnectEntity mqttConnectEntity = mqttConnectConverterEntity.convertToMqttConnectEntity(mqttConnect);
-        mqttConnectDao.persist(mqttConnectEntity);
+        mqttConnectDao.persist(mqttConnect);
     }
 
-    public MqttConnectEntity findByMqttName(String mqttName){
+    public void update(MqttConnect mqttConnect){
+        mqttConnectDao.update(mqttConnect);
+    }
+
+    public MqttConnect findByMqttName(String mqttName){
         return mqttConnectDao.findByMqttName(mqttName);
     }
 
@@ -37,7 +34,7 @@ public class DbMqttConnectService {
         mqttConnectDao.removeByMqttName(mqttName);
     }
 
-    public void addSubscribeAndUpdate(String mqttName, String subscribe){
+    /*public void addSubscribeAndUpdate(String mqttName, String subscribe){
         MqttConnectEntity mqttConnectEntity = findByMqttName(mqttName);
         if(mqttConnectEntity == null) return;
         SubscribeEntity subscribeEntity = new SubscribeEntity();
@@ -73,15 +70,10 @@ public class DbMqttConnectService {
         if(id != null){
             mqttConnectDao.removeUserNameById(id);
         }
-    }
+    }*/
 
     public Set<MqttConnect> findAll(){
-        List<MqttConnectEntity> mqttConnectEntities = mqttConnectDao.findAll();
-        Set<MqttConnect> mqttConnects = new HashSet<>();
-        for (MqttConnectEntity mqttConnectEntity : mqttConnectEntities){
-            MqttConnect mqttConnect = mqttConnectConverterEntity.convertToMqttConnect(mqttConnectEntity);
-            mqttConnects.add(mqttConnect);
-        }
-        return mqttConnects;
+        List<MqttConnect> mqttConnects = mqttConnectDao.findAll();
+        return new HashSet<>(mqttConnects);
     }
 }

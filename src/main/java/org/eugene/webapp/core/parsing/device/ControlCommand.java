@@ -1,13 +1,28 @@
 package org.eugene.webapp.core.parsing.device;
 
+import javax.persistence.*;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Entity
+@Table(name = "control_commands")
 public class ControlCommand {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "params")
     private String params;
+    @Column(name = "description")
     private String description;
+    @Column(name = "command_text")
     private String commandText;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Device device;
+
     private final String changeValueToken = "--value";
 
     public ControlCommand(String name, String params, String description, String commandText) {
@@ -15,6 +30,14 @@ public class ControlCommand {
         this.params = params;
         this.description = description;
         this.commandText = commandText;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

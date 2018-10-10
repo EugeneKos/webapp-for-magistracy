@@ -25,10 +25,10 @@ public class AddDevice extends TotalUserCom implements Command {
         User user = userOperation.getCurrentUser();
         if(user != null){
             Device device = ScriptCreator.createDevice(user,arguments.get(0));
-            if(device != null){
-                userOperation.saveUsers();
+            /*if(device != null){
                 userOperation.addDeviceIntoDB(user.getLogin(),device);
-            }
+            }*/
+            userOperation.updateUser();
         } else {
             printSystemInformation("user not found !!!");
         }

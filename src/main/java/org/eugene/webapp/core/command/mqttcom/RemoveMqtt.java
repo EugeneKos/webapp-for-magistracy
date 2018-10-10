@@ -19,7 +19,6 @@ public class RemoveMqtt extends TotalMqttCom implements Command {
     @Override
     public void perform() {
         mqttConnectOperations.removeMqtt();
-        mqttConnectOperations.saveMqttConnects();
     }
 
     @Override

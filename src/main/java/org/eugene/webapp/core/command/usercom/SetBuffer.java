@@ -24,8 +24,8 @@ public class SetBuffer extends TotalUserCom implements Command {
         if(user != null){
             try {
                 user.setBufferSize(Integer.parseInt(arguments.get(0)));
-                userOperation.saveUsers();
-                userOperation.easyUpdateIntoDB();
+                //userOperation.easyUpdateIntoDB();
+                userOperation.updateUser();
                 printSystemInformation("buffer size changed");
             } catch (NumberFormatException e){
                 printSystemInformation("Input buffer size error!");

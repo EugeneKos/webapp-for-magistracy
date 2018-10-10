@@ -20,7 +20,6 @@ public class CreateMqtt extends TotalMqttCom implements Command {
     @Override
     public void perform() {
         mqttConnectOperations.addMqtt(new MqttConnect(arguments.get(0),arguments.get(1),arguments.get(2)));
-        mqttConnectOperations.saveMqttConnects();
     }
 
     @Override

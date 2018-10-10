@@ -22,7 +22,6 @@ public class CreateUser extends TotalUserCom implements Command {
     public void perform() {
         try {
             userOperation.addUser(new User(arguments.get(0),arguments.get(1),arguments.get(2),Integer.parseInt(arguments.get(3))));
-            userOperation.saveUsers();
         } catch (NumberFormatException e){
             printSystemInformation("Input buffer size error!");
         }

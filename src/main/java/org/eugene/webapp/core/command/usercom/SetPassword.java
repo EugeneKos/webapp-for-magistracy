@@ -24,8 +24,8 @@ public class SetPassword extends TotalUserCom implements Command {
         if(user != null){
             if(arguments.get(0).equals(user.getPassword())){
                 user.setPassword(arguments.get(1));
-                userOperation.saveUsers();
-                userOperation.easyUpdateIntoDB();
+                //userOperation.easyUpdateIntoDB();
+                userOperation.updateUser();
                 printSystemInformation("password changed");
             } else {
                 printSystemInformation("old password is incorrect");

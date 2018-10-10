@@ -27,7 +27,6 @@ public class MainController {
     public MainController(AdminService adminService, UserService userService) {
         this.adminService = adminService;
         this.userService = userService;
-        adminService.setPathToDB("C:\\Users\\ED.Kosinov\\Documents\\MagistracyProjects\\webapp-for-magistracy\\src\\main\\resources\\db");
         adminService.setPathToScripts("C:\\Users\\ED.Kosinov\\Documents\\MagistracyProjects\\webapp-for-magistracy\\src\\main\\resources\\scripts");
     }
 
@@ -103,9 +102,9 @@ public class MainController {
 
     @RequestMapping(value = "/user_input_data")
     public ModelAndView userInputData(ModelMap modelMap) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        /*Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<Data> inputData = userService.getInputData(authentication.getName());
-        modelMap.addAttribute("inputData",inputData);
+        modelMap.addAttribute("inputData",inputData);*/
         return new ModelAndView("view-input");
     }
 

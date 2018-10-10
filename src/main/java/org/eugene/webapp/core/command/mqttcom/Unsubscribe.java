@@ -28,8 +28,8 @@ public class Unsubscribe extends TotalMqttCom implements Command {
         MqttConnect currentMqttConnect = mqttConnectOperations.getCurrentMqttConnect();
         if(currentMqttConnect != null){
             currentMqttConnect.unsubscribe(arguments);
-            mqttConnectOperations.saveMqttConnects();
-            mqttConnectOperations.removeSubscribesFromDB(currentMqttConnect.getMqttName(),arguments);
+            //mqttConnectOperations.removeSubscribesFromDB(currentMqttConnect.getMqttName(),arguments);
+            mqttConnectOperations.updateMqttConnect();
         } else {
             printSystemInformation("mqtt connection does not exist");
         }

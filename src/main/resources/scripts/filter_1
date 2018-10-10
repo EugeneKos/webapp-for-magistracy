@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <script-creater>
+    <name>filter_1</name>
     <mqtt name="name_2" topic="/v1/flex/001F4861FD1D/interesting_events"/>
     <data-for-format>{"ts_ms":1539084720848,"tz":"UTC","wallclock":"2018-10-09T11:32:00.848Z","upTime_sec":854206.026232937,"loadAvg":[0.03271484375,0.02587890625,0.04541015625],"totMem":252280832,"freeMem":195440640,"hostName":"mojix61fd1d","deviceName":"STARflex Instance","temperature":{"C":49.06,"F":120.31},"activeRFIDProgramName":"basic","cpuUtilPercent":2.2,"mqtt":{"connectionActive":true},"metaData":{"type":"keepAlive","myID":"001F4861FD1D"}}</data-for-format>
     <key-values>

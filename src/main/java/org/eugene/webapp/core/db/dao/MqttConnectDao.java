@@ -1,8 +1,7 @@
 package org.eugene.webapp.core.db.dao;
 
-import org.eugene.webapp.core.db.model.mqtt.MqttConnectEntity;
-import org.eugene.webapp.core.db.model.mqtt.SubscribeEntity;
-import org.eugene.webapp.core.db.model.mqtt.UserNameEntity;
+import org.eugene.webapp.core.mqtt.MqttConnect;
+import org.eugene.webapp.core.mqtt.Subscribe;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,54 +17,46 @@ public class MqttConnectDao {
     private EntityManager entityManager;
 
     @Transactional
-    public void persist(MqttConnectEntity mqttConnectEntity){
-        entityManager.persist(mqttConnectEntity);
+    public void persist(MqttConnect mqttConnect){
+        entityManager.persist(mqttConnect);
     }
 
     @Transactional
-    public void update(MqttConnectEntity mqttConnectEntity) {
-        entityManager.merge(mqttConnectEntity);
+    public void update(MqttConnect mqttConnect) {
+        entityManager.merge(mqttConnect);
     }
 
     @Transactional
-    public MqttConnectEntity findByMqttName(String mqttName) {
-        MqttConnectEntity mqttConnectEntity = null;
+    public MqttConnect findByMqttName(String mqttName) {
+        MqttConnect mqttConnect = null;
         try {
-            mqttConnectEntity = (MqttConnectEntity) entityManager.createQuery("SELECT p FROM MqttConnectEntity p WHERE p.mqttName LIKE :mqttName")
+            mqttConnect = (MqttConnect) entityManager.createQuery("SELECT p FROM MqttConnect p WHERE p.mqttName LIKE :mqttName")
                     .setParameter("mqttName",mqttName)
                     .getSingleResult();
         } catch (NoResultException e){
             System.err.println("No result");
         }
-        return mqttConnectEntity;
+        return mqttConnect;
     }
 
     @Transactional
     public void removeByMqttName(String mqttName) {
-        MqttConnectEntity mqttConnectEntity = findByMqttName(mqttName);
-        if (mqttConnectEntity != null) {
-            entityManager.remove(mqttConnectEntity);
+        MqttConnect mqttConnect = findByMqttName(mqttName);
+        if (mqttConnect != null) {
+            entityManager.remove(mqttConnect);
         }
     }
 
     @Transactional
     public void removeSubscribeById(Long id){
-        SubscribeEntity subscribeEntity = entityManager.find(SubscribeEntity.class,id);
-        if(subscribeEntity != null){
-            entityManager.remove(subscribeEntity);
+        Subscribe subscribe = entityManager.find(Subscribe.class,id);
+        if(subscribe != null){
+            entityManager.remove(subscribe);
         }
     }
 
     @Transactional
-    public void removeUserNameById(Long id){
-        UserNameEntity userNameEntity = entityManager.find(UserNameEntity.class,id);
-        if(userNameEntity != null){
-            entityManager.remove(userNameEntity);
-        }
-    }
-
-    @Transactional
-    public List<MqttConnectEntity> findAll() {
-        return entityManager.createQuery("SELECT p FROM MqttConnectEntity p").getResultList();
+    public List<MqttConnect> findAll() {
+        return entityManager.createQuery("SELECT p FROM MqttConnect p").getResultList();
     }
 }

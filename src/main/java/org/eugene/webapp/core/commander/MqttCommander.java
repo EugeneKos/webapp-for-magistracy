@@ -28,10 +28,8 @@ public class MqttCommander extends Commander {
         addCommand(new AddUser(mqttConnectOperations));
         addCommand(new RemoveUser(mqttConnectOperations));
         addCommand(new LoadData(mqttConnectOperations));
-        addCommand(new SaveData(mqttConnectOperations));
         addCommand(new RemoveUserFromAllMqtt(mqttConnectOperations));
         addCommand(new StartMqttAll(mqttConnectOperations));
         addCommand(new DisconnectMqttAll(mqttConnectOperations));
-        addCommand(new SetPathToDB(mqttConnectOperations));
     }
 }

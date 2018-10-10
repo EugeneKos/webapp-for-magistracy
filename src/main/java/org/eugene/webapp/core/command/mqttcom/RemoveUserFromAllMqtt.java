@@ -25,7 +25,6 @@ public class RemoveUserFromAllMqtt extends TotalMqttCom implements Command {
         User user = userOperation.getUserByLogin(arguments.get(0));
         if(user != null){
             mqttConnectOperations.removeUserFromAllMqtt(user);
-            mqttConnectOperations.saveMqttConnects();
             printSystemInformation("user with login < " +arguments.get(0)+ " > was deleted into all mqtt connects");
         } else {
             printSystemInformation("user with login < " +arguments.get(0)+ " > does not exist");

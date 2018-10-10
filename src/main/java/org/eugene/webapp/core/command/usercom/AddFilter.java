@@ -27,8 +27,8 @@ public class AddFilter extends TotalUserCom implements Command {
             DataFilter dataFilter = createDataFilter(arguments.get(0));
             if(dataFilter != null){
                 user.addFilter(dataFilter);
-                userOperation.saveUsers();
-                userOperation.addDataFilterIntoDB(user.getLogin(), dataFilter);
+                //userOperation.addDataFilterIntoDB(user.getLogin(), dataFilter);
+                userOperation.updateUser();
             } else {
                 printSystemInformation("error creating the filter, the filter was not created");
             }
