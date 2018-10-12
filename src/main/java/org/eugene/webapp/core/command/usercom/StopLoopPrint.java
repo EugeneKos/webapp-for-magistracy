@@ -1,6 +1,6 @@
 package org.eugene.webapp.core.command.usercom;
 
-import org.eugene.webapp.core.parsing.filter.DataFilter;
+import org.eugene.webapp.core.filter.DataFilter;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 import org.eugene.webapp.core.command.Command;

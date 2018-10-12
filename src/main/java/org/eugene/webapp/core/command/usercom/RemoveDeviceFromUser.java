@@ -1,34 +1,30 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.parsing.ScriptCreator;
-import org.eugene.webapp.core.parsing.device.Device;
+import org.eugene.webapp.core.device.Device;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
-public class AddDevice extends TotalUserCom implements Command {
-    public AddDevice(UserOperation userOperation) {
+public class RemoveDeviceFromUser extends TotalUserCom implements Command {
+    public RemoveDeviceFromUser(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "device-add";
+        return "device-usr-rm";
     }
 
     @Override
     public void perform() {
         User user = userOperation.getCurrentUser();
         if(user != null){
-            Device device = ScriptCreator.createDevice(user,arguments.get(0));
-            /*if(device != null){
-                userOperation.addDeviceIntoDB(user.getLogin(),device);
-            }*/
-            userOperation.updateUser();
+            Device device = user.removeDevice(arguments.get(0));
+            userOperation.removeDeviceFromLinkTable(user.getLogin(),device);
         } else {
             printSystemInformation("user not found !!!");
         }
@@ -45,6 +41,6 @@ public class AddDevice extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "device-add [file script name]";
+        return "device-usr-rm [deviceName]";
     }
 }

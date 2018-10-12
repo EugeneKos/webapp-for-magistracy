@@ -14,6 +14,12 @@ public class Subscribe {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private MqttConnect mqttConnect;
 
+    public Subscribe(String subscribe) {
+        this.subscribe = subscribe;
+    }
+
+    public Subscribe() {}
+
     public Long getId() {
         return id;
     }
@@ -36,5 +42,20 @@ public class Subscribe {
 
     public void setMqttConnect(MqttConnect mqttConnect) {
         this.mqttConnect = mqttConnect;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Subscribe subscribe1 = (Subscribe) o;
+
+        return subscribe != null ? subscribe.equals(subscribe1.subscribe) : subscribe1.subscribe == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return subscribe != null ? subscribe.hashCode() : 0;
     }
 }

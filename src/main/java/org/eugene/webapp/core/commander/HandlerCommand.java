@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.eugene.webapp.core.command.Commands.*;
-import static org.eugene.webapp.core.printer.PrintInformation.*;
+import static org.eugene.webapp.core.utils.PrintInformation.*;
 
 @Component
 public class HandlerCommand {

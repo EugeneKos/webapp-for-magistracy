@@ -1,4 +1,4 @@
-package org.eugene.webapp.core.parsing.device;
+package org.eugene.webapp.core.device;
 
 import org.eugene.webapp.core.user.User;
 
@@ -24,10 +24,9 @@ public class Device {
     @Column(name = "topic")
     private String topic;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "device")
-    private Set<ControlCommand> commands;
-    @ManyToMany(mappedBy = "devices")
-    private Set<User> users;
-
+    private Set<ControlCommand> commands = new HashSet<>();
+    @ManyToMany(mappedBy = "devices", fetch = FetchType.EAGER)
+    private Set<User> users = new HashSet<>();
 
     public Device(String name, String description, String mqttName, String topic) {
         this.name = name;
@@ -35,6 +34,8 @@ public class Device {
         this.mqttName = mqttName;
         this.topic = topic;
     }
+
+    public Device() {}
 
     public Long getId() {
         return id;
@@ -69,7 +70,9 @@ public class Device {
     }
 
     public void addControlCommand(String commandName, String params, String description, String commandText){
-        commands.add(new ControlCommand(commandName,params,description,commandText));
+        ControlCommand controlCommand = new ControlCommand(commandName,params,description,commandText);
+        controlCommand.setDevice(this);
+        commands.add(controlCommand);
     }
 
     public void removeControlCommand(String commandName){

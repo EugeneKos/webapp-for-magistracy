@@ -1,6 +1,6 @@
-package org.eugene.webapp.core.parsing.filter;
+package org.eugene.webapp.core.filter;
 
-import org.eugene.webapp.core.printer.PrintInformation;
+import org.eugene.webapp.core.utils.PrintInformation;
 import org.eugene.webapp.core.user.User;
 
 import javax.persistence.*;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 
 @Entity
-@Table(name = "users")
+@Table(name = "filters")
 public class DataFilter {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,12 +28,12 @@ public class DataFilter {
     @Column(name = "mqtt_name")
     private String mqttName;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dataFilter")
-    private Set<KeyValueRegexp> keyValueRegexps;
+    private Set<KeyValueRegexp> keyValueRegexps = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dataFilter")
-    private Set<DataConverter> converters;
-    @ManyToMany(mappedBy = "filters")
-    private Set<User> users;
-
+    private Set<DataConverter> converters = new HashSet<>();
+    @ManyToMany(mappedBy = "filters", fetch = FetchType.EAGER)
+    private Set<User> users = new HashSet<>();
+    @Transient
     private boolean resolutionPrint;
 
     public DataFilter(String name, String topicName, String mqttName){
@@ -42,6 +42,8 @@ public class DataFilter {
         this.mqttName = mqttName;
 
     }
+
+    public DataFilter() {}
 
     public Long getId() {
         return id;
@@ -52,12 +54,16 @@ public class DataFilter {
     }
 
     public void addKeyValueRegexp(String key, String value){
-        keyValueRegexps.add(new KeyValueRegexp(key,value));
+        KeyValueRegexp keyValueRegexp = new KeyValueRegexp(key,value);
+        keyValueRegexp.setDataFilter(this);
+        keyValueRegexps.add(keyValueRegexp);
 
     }
 
     public void addConverter(String key, String input, String output){
-        converters.add(new DataConverter(key, input,output));
+        DataConverter dataConverter = new DataConverter(key,input,output);
+        dataConverter.setDataFilter(this);
+        converters.add(dataConverter);
     }
 
     public Data filter(String dirtyData){
@@ -143,20 +149,15 @@ public class DataFilter {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         DataFilter that = (DataFilter) o;
 
-        if (topicName != null ? !topicName.equals(that.topicName) : that.topicName != null) return false;
-        return mqttName != null ? mqttName.equals(that.mqttName) : that.mqttName == null;
+        return name != null ? name.equals(that.name) : that.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (topicName != null ? topicName.hashCode() : 0);
-        result = 31 * result + (mqttName != null ? mqttName.hashCode() : 0);
-        return result;
+        return name != null ? name.hashCode() : 0;
     }
 
     private String getKeyValueRegexpInfo(){

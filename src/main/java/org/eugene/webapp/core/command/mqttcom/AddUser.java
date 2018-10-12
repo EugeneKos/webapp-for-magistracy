@@ -8,7 +8,7 @@ import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class AddUser extends TotalMqttCom implements Command {
 
@@ -29,8 +29,7 @@ public class AddUser extends TotalMqttCom implements Command {
             MqttConnect currentMqttConnect = mqttConnectOperations.getCurrentMqttConnect();
             if(currentMqttConnect != null){
                 currentMqttConnect.addUser(user);
-                //mqttConnectOperations.addUserNameIntoDB(currentMqttConnect.getMqttName(),user.getLogin());
-                mqttConnectOperations.updateMqttConnect();
+                mqttConnectOperations.addUserIntoMqttConnectAndUpdate(currentMqttConnect.getMqttName(),userOperation.getUserByLoginFromDB(user.getLogin()));
             } else {
                 printSystemInformation("mqtt connection does not exist");
             }

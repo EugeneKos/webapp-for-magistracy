@@ -1,4 +1,4 @@
-package org.eugene.webapp.core.parsing.filter;
+package org.eugene.webapp.core.filter;
 
 import javax.persistence.*;
 
@@ -23,6 +23,8 @@ public class DataConverter {
         this.input = input;
         this.output = output;
     }
+
+    public DataConverter() {}
 
     public Long getId() {
         return id;

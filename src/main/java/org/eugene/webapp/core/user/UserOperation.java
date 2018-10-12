@@ -1,132 +1,33 @@
 package org.eugene.webapp.core.user;
 
-import org.eugene.webapp.core.db.services.DbUserService;
-import org.eugene.webapp.core.mqtt.MqttConnect;
-import org.eugene.webapp.core.parsing.device.Device;
-import org.eugene.webapp.core.parsing.filter.DataFilter;
+import org.eugene.webapp.core.dao.DataFilterDao;
+import org.eugene.webapp.core.dao.DeviceDao;
+import org.eugene.webapp.core.dao.UserDao;
+import org.eugene.webapp.core.device.Device;
+import org.eugene.webapp.core.filter.DataFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
-import static org.eugene.webapp.core.printer.PrintInformation.*;
+import static org.eugene.webapp.core.utils.PrintInformation.*;
 
 @Component
 public class UserOperation {
-    //private Map<String,User> userMap = new HashMap<>();
+    private Set<User> users = new HashSet<>();
     private User currentUser;
     private DataFilter dataFilter;
-    private final DbUserService dbUserService;
+    private final UserDao userDao;
+    private final DeviceDao deviceDao;
+    private final DataFilterDao dataFilterDao;
 
     @Autowired
-    public UserOperation(DbUserService dbUserService) {
-        this.dbUserService = dbUserService;
+    public UserOperation(UserDao userDao, DeviceDao deviceDao, DataFilterDao dataFilterDao) {
+        this.userDao = userDao;
+        this.deviceDao = deviceDao;
+        this.dataFilterDao = dataFilterDao;
     }
-
-    public void addUser(User user){
-        /*if(!userMap.keySet().contains(user.getLogin())){
-            userMap.put(user.getLogin(),user);
-            currentUser = user;
-            crudOperationUserIntoDB("create");
-            printSystemInformation("user added");
-        } else {
-            printSystemInformation("user with login < "+user.getLogin()+" > already exist");
-        }*/
-        dbUserService.persist(user);
-    }
-
-    public void selectUser(String login){
-        /*currentUser = userMap.get(login);
-        if(currentUser == null){
-            printSystemInformation("user with login < "+login+" > not found !!!");
-        } else {
-            printSystemInformation("selected user with login < "+login+" >");
-        }*/
-        currentUser = dbUserService.findByLogin(login);
-    }
-
-    public void removeUser(){
-        /*if(currentUser != null){
-            if(currentUser.isMqttConnectsEmpty()){
-                userMap.remove(currentUser.getLogin());
-                crudOperationUserIntoDB("delete");
-                printSystemInformation("current user deleted");
-                currentUser = null;
-            } else {
-                printSystemInformation("removal impossible, remove all incoming mqtt connections");
-            }
-        } else {
-            printSystemInformation("current user not found !!!");
-        }*/
-        if(currentUser != null){
-            dbUserService.removeByLogin(currentUser.getLogin());
-        }
-    }
-
-    //----------------- methods for working Data Base -----------------------------
-
-   /* public void saveUsersIntoDB(){
-        for (User user : userMap.values()){
-            dbUserService.persist(user);
-        }
-    }
-
-    public void loadUsersFromDB(){
-        for (Map.Entry<String,User> entry : dbUserService.findAll().entrySet()){
-            userMap.put(entry.getKey(),entry.getValue());
-        }
-    }*/
-
-   public void updateUser(){
-       if(currentUser != null){
-           dbUserService.update(currentUser);
-       }
-   }
-
-    private void crudOperationUserIntoDB(String crud){
-        if(currentUser != null){
-            switch (crud){
-                case "create":
-                    dbUserService.persist(currentUser);
-                    break;
-                case "delete":
-                    dbUserService.removeByLogin(currentUser.getLogin());
-                    break;
-            }
-        }
-    }
-
-   /* public void easyUpdateIntoDB(){
-        dbUserService.easyUpdate(currentUser);
-    }
-
-    public void addDataFilterIntoDB(String userLogin, DataFilter dataFilter){
-        dbUserService.addDataFilterAndUpdate(userLogin, dataFilter);
-    }
-
-    public void removeDataFilterFromDB(String userLogin, DataFilter dataFilter){
-        if(dataFilter == null) return;
-        dbUserService.removeDataFilterAndUpdate(userLogin, dataFilter);
-    }
-
-    public void addDeviceIntoDB(String userLogin, Device device){
-        dbUserService.addDeviceAndUpdate(userLogin,device);
-    }
-
-    public void removeDeviceFromDB(String userLogin, Device device){
-        if(device == null) return;
-        dbUserService.removeDeviceAndUpdate(userLogin,device);
-    }*/
-
-    //-------------------------------------------------------------------------------
-
-    /*public void removeMqttConnectFromUsers(MqttConnect mqttConnect){
-        for(User user : userMap.values()){
-            user.removeMqttConnect(mqttConnect);
-        }
-    }*/
 
     public void setDataFilter(DataFilter dataFilter) {
         this.dataFilter = dataFilter;
@@ -136,22 +37,184 @@ public class UserOperation {
         return dataFilter;
     }
 
-    public User getCurrentUser(){
+    public User getCurrentUser() {
         return currentUser;
     }
 
-    public User getUserByLogin(String login){
-        return dbUserService.findByLogin(login);
+    public void addUser(User user) {
+        if(users.add(user)){
+            userDao.persist(user);
+            currentUser = user;
+            printSystemInformation("user added");
+        } else {
+            printSystemInformation("user with login < "+user.getLogin()+" > already exist");
+        }
     }
 
-    public void printAllUsers(){
-        Collection<User> userCollection = dbUserService.findAll();
-        if(userCollection.isEmpty()){
+    public void selectUser(String login) {
+        currentUser = userDao.findByLogin(login);
+        for (User user : users){
+            if(user.getLogin().equals(login)){
+                currentUser = user;
+                printSystemInformation("selected user with login < "+login+" >");
+                return;
+            }
+        }
+        printSystemInformation("user with login < "+login+" > not found !!!");
+    }
+
+    public void removeUser() {
+        if (currentUser != null) {
+            if(currentUser.isMqttConnectsEmpty()){
+                users.remove(currentUser);
+                userDao.removeByLogin(currentUser.getLogin());
+                printSystemInformation("current user deleted");
+                currentUser = null;
+            } else {
+                printSystemInformation("removal impossible, remove all incoming mqtt connections");
+            }
+        } else {
+            printSystemInformation("current user not found !!!");
+        }
+    }
+
+    public User getUserByLogin(String login) {
+        for (User user : users){
+            if(user.getLogin().equals(login)){
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public User getUserByLoginFromDB(String login){
+        return userDao.findByLogin(login);
+    }
+
+    public void updateUserInDB() {
+        if (currentUser != null) {
+            User user = userDao.findByLogin(currentUser.getLogin());
+            if(user != null){
+                user.setPassword(currentUser.getPassword());
+                user.setRole(currentUser.getRole());
+                user.setBufferSize(currentUser.getBufferSize());
+                userDao.update(user);
+            }
+        }
+    }
+
+    public void addFilterIntoUserAndUpdate(DataFilter dataFilter){
+        User user = userDao.findByLogin(currentUser.getLogin());
+        if(user != null){
+            user.getFilters().add(dataFilter);
+            userDao.update(user);
+        }
+    }
+
+    public void addDeviceIntoUserAndUpdate(Device device){
+        User user = userDao.findByLogin(currentUser.getLogin());
+        if(user != null){
+            user.getDevices().add(device);
+            userDao.update(user);
+        }
+    }
+
+
+    //--------------------------------devices------------------------------------------------
+
+    public void addDeviceIntoDB(Device device){
+        if(getDeviceByName(device.getName()) == null){
+            deviceDao.persist(device);
+            printSystemInformation("device added into data base");
+        } else {
+            printSystemInformation("device already exist");
+        }
+    }
+
+    public void removeDeviceFromDB(String deviceName){
+        Device device = getDeviceByName(deviceName);
+        if(device != null){
+            for (User user : users){
+                user.getDevices().remove(device);
+            }
+            for (User user : userDao.findAll()){
+                user.getDevices().remove(device);
+                userDao.update(user);
+            }
+            deviceDao.removeByDeviceName(deviceName);
+            printSystemInformation("device deleted");
+        } else {
+            printSystemInformation("device not found");
+        }
+    }
+
+    public void removeDeviceFromLinkTable(String userLogin, Device device){
+        User user = userDao.findByLogin(userLogin);
+        if(user != null){
+            user.getDevices().remove(device);
+            userDao.update(user);
+        }
+    }
+
+    public Device getDeviceByName(String deviceName){
+        return deviceDao.findByDeviceName(deviceName);
+    }
+
+    //--------------------------------------------------------------------------------------
+
+    //--------------------------------filters-----------------------------------------------
+
+    public void addDataFilterIntoDB(DataFilter dataFilter){
+        if(getDataFilterByName(dataFilter.getName()) == null){
+            dataFilterDao.persist(dataFilter);
+            printSystemInformation("filter added");
+        } else {
+            printSystemInformation("filter exist");
+        }
+    }
+
+    public void removeDataFilterFromDB(String dataFilterName){
+        DataFilter dataFilter = getDataFilterByName(dataFilterName);
+        if(dataFilter != null){
+            for (User user : users){
+                user.getFilters().remove(dataFilter);
+            }
+            for (User user : userDao.findAll()){
+                user.getFilters().remove(dataFilter);
+                userDao.update(user);
+            }
+            dataFilterDao.removeByDataFilterName(dataFilterName);
+            printSystemInformation("filter deleted");
+        } else {
+            printSystemInformation("filter not found");
+        }
+    }
+
+    public void removeDataFilterFromLinkTable(String userLogin, DataFilter dataFilter){
+        User user = userDao.findByLogin(userLogin);
+        if(user != null){
+            user.getFilters().remove(dataFilter);
+            userDao.update(user);
+        }
+    }
+
+    public DataFilter getDataFilterByName(String dataFilterName){
+        return dataFilterDao.findByDataFilterName(dataFilterName);
+    }
+
+    //--------------------------------------------------------------------------------------
+
+    public void loadUsersFromDB(){
+        users = new HashSet<>(userDao.findAll());
+    }
+
+    public void printAllUsers() {
+        if (users.isEmpty()) {
             printSystemInformation("users not found !!!");
             return;
         }
         printCap();
-        for (User user : userCollection){
+        for (User user : users) {
             printFormatInformation(user.getLogin());
         }
         printCap();

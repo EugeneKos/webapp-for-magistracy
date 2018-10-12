@@ -1,6 +1,6 @@
 package org.eugene.webapp.controller;
 
-import org.eugene.webapp.core.parsing.filter.Data;
+import org.eugene.webapp.core.filter.Data;
 import org.eugene.webapp.services.AdminService;
 import org.eugene.webapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,9 +102,9 @@ public class MainController {
 
     @RequestMapping(value = "/user_input_data")
     public ModelAndView userInputData(ModelMap modelMap) {
-        /*Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<Data> inputData = userService.getInputData(authentication.getName());
-        modelMap.addAttribute("inputData",inputData);*/
+        modelMap.addAttribute("inputData",inputData);
         return new ModelAndView("view-input");
     }
 

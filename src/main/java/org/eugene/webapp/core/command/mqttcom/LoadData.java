@@ -17,21 +17,12 @@ public class LoadData extends TotalMqttCom implements Command {
 
     @Override
     public void perform() {
-        if (arguments.size() == 0) {
-
-        }
-        if (arguments.size() == 1 && arguments.get(0).equals("base")) {
-           /* mqttConnectOperations.getUserOperation().loadUsersFromDB();
-            mqttConnectOperations.loadMqttConnectsFromDB();*/
-        }
+        mqttConnectOperations.getUserOperation().loadUsersFromDB();
+        mqttConnectOperations.loadMqttConnects();
     }
 
     @Override
     public boolean checkArgs(List<String> arguments) {
-        if (arguments.size() == 1 && arguments.get(0).equals("base")) {
-            super.arguments = arguments;
-            return true;
-        }
         if (arguments.size() == 0) {
             super.arguments = arguments;
             return true;
@@ -41,6 +32,6 @@ public class LoadData extends TotalMqttCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "load [] [base]";
+        return "load []";
     }
 }

@@ -2,13 +2,13 @@ package org.eugene.webapp.core.mqtt;
 
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.eugene.webapp.core.printer.PrintInformation;
+import org.eugene.webapp.core.utils.PrintInformation;
 import org.eugene.webapp.core.user.User;
 
 import javax.persistence.*;
 import java.util.*;
 
-import static org.eugene.webapp.core.printer.PrintInformation.*;
+import static org.eugene.webapp.core.utils.PrintInformation.*;
 
 @Entity
 @Table(name = "mqtt_connects")
@@ -23,20 +23,28 @@ public class MqttConnect {
     private String broker; // = "tcp://iot.eclipse.org:1883"; // Сервер к которому я подключаюсь
     @Column(name = "clientId")
     private String clientId; // = "JavaSample"; // Идентификатор клиента
-    @ManyToMany(mappedBy = "mqttConnects")
-    private Set<User> users;
+
+    @ManyToMany(fetch = FetchType.EAGER/*, cascade = CascadeType.MERGE*/)
+    @JoinTable(name = "MqttConnects_Users",
+            joinColumns = @JoinColumn(name = "MqttConnect_ID"),
+            inverseJoinColumns = @JoinColumn(name = "User_ID"))
+    private Set<User> users = new HashSet<>();
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "mqttConnect")
-    private Set<Subscribe> subscribes;
+    private Set<Subscribe> subscribes = new HashSet<>();
 
+    @Transient
     private MemoryPersistence persistence = new MemoryPersistence();
+    @Transient
     private MqttClient sampleClient;
-
+    @Transient
     private String userName = null; // = Имя пользователя для подключения м авторизацией
+    @Transient
     private String password = null; // = Пароль для подключения
+    @Transient
     private boolean resolutionPrint = false;
-    /*private Set<String> setSubscribes = new HashSet<>();
-    private Set<String> userNames = new HashSet<>();*/
-    //private final Object monitor = new Object();
+    @Transient
+    private final Object monitor = new Object();
 
     public MqttConnect(String mqttName, String broker, String clientId){
         this.mqttName = mqttName;
@@ -81,7 +89,7 @@ public class MqttConnect {
             System.out.println("Connected");
             addMessageIntoBuffer("Connected");
 
-            //autoSubscribe(setSubscribes);
+            autoSubscribe();
 
             sampleClient.setCallback(new MqttCallback() {
                 @Override
@@ -133,7 +141,10 @@ public class MqttConnect {
     public void subscribe(String topic, int qos){
         try {
             sampleClient.subscribe(topic,qos);
-            //setSubscribes.add(topic);
+            Subscribe subscribe = new Subscribe(topic);
+            //subscribe.setSubscribe(topic);
+            subscribe.setMqttConnect(this);
+            subscribes.add(subscribe);
             System.out.println("Subscribe to: "+topic);
             addMessageIntoBuffer("Subscribe to: "+topic);
         } catch (MqttException e) {
@@ -141,9 +152,10 @@ public class MqttConnect {
         }
     }
 
-    private void autoSubscribe(Set<String> setSubscribes){
+    private void autoSubscribe(){
         try {
-            for (String topic : setSubscribes){
+            for (Subscribe subscribe : subscribes){
+                String topic = subscribe.getSubscribe();
                 sampleClient.subscribe(topic,2);
                 System.out.println("Subscribe to: "+topic);
                 addMessageIntoBuffer("Subscribe to: "+topic);
@@ -156,7 +168,6 @@ public class MqttConnect {
     public void unsubscribe(String[] topicFilter){
         try {
             sampleClient.unsubscribe(topicFilter);
-            //setSubscribes.removeAll(Arrays.asList(topicFilter));
             System.out.println("unsubscribe from: "+Arrays.toString(topicFilter));
             addMessageIntoBuffer("unsubscribe from: "+Arrays.toString(topicFilter));
         } catch (MqttException e) {
@@ -190,34 +201,33 @@ public class MqttConnect {
     }
 
     public void addUser(User user){
-        //synchronized (monitor){
+        synchronized (monitor){
             if(users.add(user)){
-                //userNames.add(user.getLogin());
                 user.addMqttConnect(this);
                 printSystemInformation("user < "+user.getLogin()+" > added in mqtt < "+ mqttName +" > data base");
             } else {
                 printSystemInformation("user < "+user.getLogin()+" > already exist in mqtt < "+ mqttName +" > data base");
             }
-       // }
+        }
     }
 
     public void removeUser(User user){
-        //synchronized (monitor){
-            if(users.remove(user) /*&& userNames.remove(user.getLogin())*/){
+        synchronized (monitor){
+            if(users.remove(user)){
                 user.removeMqttConnect(this);
                 printSystemInformation("user < "+user.getLogin()+" > deleted from mqtt < "+ mqttName +" > data base");
             } else {
                 printSystemInformation("user < "+user.getLogin()+" > not found in mqtt < "+ mqttName +" > data base");
             }
-       // }
+        }
     }
 
     private void dispatch(String topic, String message){
-        //synchronized (monitor){
+        synchronized (monitor){
             for (User user : users){
                 user.addIntoQueue(mqttName,topic,message);
             }
-       // }
+        }
     }
 
     public String getBroker() {
@@ -228,27 +238,43 @@ public class MqttConnect {
         return clientId;
     }
 
-    /*public Set<String> getUserNames() {
-        return userNames;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public void setUserNames(Set<String> userNames) {
-        this.userNames = userNames;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
-    public Set<String> getSetSubscribes() {
-        return setSubscribes;
+    public Set<Subscribe> getSubscribes() {
+        return subscribes;
     }
 
-    public void setSetSubscribes(Set<String> setSubscribes) {
-        this.setSubscribes = setSubscribes;
-    }*/
+    public void setSubscribes(Set<Subscribe> subscribes) {
+        this.subscribes = subscribes;
+    }
 
     public String isConnected(){
         if(sampleClient != null){
             return ""+sampleClient.isConnected();
         }
         return "unknown";
+    }
+
+    private Set<String> getUserNames(){
+        Set<String> userNames = new HashSet<>();
+        for (User user : users){
+            userNames.add(user.getLogin());
+        }
+        return userNames;
+    }
+
+    private Set<String> getSubscribeTopics(){
+        Set<String> subscribeTopics = new HashSet<>();
+        for (Subscribe subscribe : subscribes){
+            subscribeTopics.add(subscribe.getSubscribe());
+        }
+        return subscribeTopics;
     }
 
     @Override
@@ -274,8 +300,8 @@ public class MqttConnect {
         mqttInfo.add("[Client Id: "+clientId+"]");
         mqttInfo.add("[Resolution print: "+resolutionPrint+"]");
         mqttInfo.add("[is Connected: "+isConnected()+"]");
-        //mqttInfo.add("[Users: "+ userNames +"]");
-        //mqttInfo.add("[Subscribes: "+setSubscribes+"]");
+        mqttInfo.add("[Users: "+ getUserNames() +"]");
+        mqttInfo.add("[Subscribes: "+ getSubscribeTopics()+"]");
         mqttInfo.add("------------------------------------------------");
         return mqttInfo;
     }
@@ -287,8 +313,8 @@ public class MqttConnect {
                 "[Client Id: "+clientId+"]"+System.lineSeparator()+
                 "[Resolution print: "+resolutionPrint+"]"+System.lineSeparator()+
                 "[is Connected: "+isConnected()+"]"+System.lineSeparator()+
-                //"[Users: "+ userNames +"]"+System.lineSeparator()+
-                //"[Subscribes: "+setSubscribes+"]"+System.lineSeparator()+
+                "[Users: "+ getUserNames() +"]"+System.lineSeparator()+
+                "[Subscribes: "+getSubscribeTopics()+"]"+System.lineSeparator()+
                 "------------------------------------------------";
     }
 

@@ -1,27 +1,28 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.utils.ScriptCreator;
+import org.eugene.webapp.core.device.Device;
 import org.eugene.webapp.core.user.UserOperation;
+import org.eugene.webapp.core.utils.ScriptCreator;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.utils.PrintInformation.*;
-
-public class SetPathToScripts extends TotalUserCom implements Command {
-    public SetPathToScripts(UserOperation userOperation) {
+public class CreateDevice extends TotalUserCom implements Command {
+    public CreateDevice(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "scripts-path";
+        return "device-cr";
     }
 
     @Override
     public void perform() {
-        ScriptCreator.setPathToScripts(arguments.get(0));
-        printSystemInformation("change path to scripts: "+arguments.get(0));
+        Device device = ScriptCreator.createDevice(arguments.get(0));
+        if(device != null){
+            userOperation.addDeviceIntoDB(device);
+        }
     }
 
     @Override
@@ -35,6 +36,6 @@ public class SetPathToScripts extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "scripts-path [path to scripts]";
+        return "device-cr [file script name]";
     }
 }

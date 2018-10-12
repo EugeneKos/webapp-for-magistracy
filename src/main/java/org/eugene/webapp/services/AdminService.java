@@ -1,8 +1,8 @@
 package org.eugene.webapp.services;
 
 import org.eugene.webapp.core.commander.HandlerCommand;
-import org.eugene.webapp.core.parsing.ScriptCreator;
-import org.eugene.webapp.core.printer.PrintInformation;
+import org.eugene.webapp.core.utils.ScriptCreator;
+import org.eugene.webapp.core.utils.PrintInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

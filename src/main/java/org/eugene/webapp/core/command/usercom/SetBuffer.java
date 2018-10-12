@@ -6,7 +6,7 @@ import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class SetBuffer extends TotalUserCom implements Command {
     public SetBuffer(UserOperation userOperation) {
@@ -24,8 +24,7 @@ public class SetBuffer extends TotalUserCom implements Command {
         if(user != null){
             try {
                 user.setBufferSize(Integer.parseInt(arguments.get(0)));
-                //userOperation.easyUpdateIntoDB();
-                userOperation.updateUser();
+                userOperation.updateUserInDB();
                 printSystemInformation("buffer size changed");
             } catch (NumberFormatException e){
                 printSystemInformation("Input buffer size error!");

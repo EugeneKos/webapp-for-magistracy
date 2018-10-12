@@ -1,4 +1,4 @@
-package org.eugene.webapp.core.db.dao;
+package org.eugene.webapp.core.dao;
 
 import org.eugene.webapp.core.mqtt.MqttConnect;
 import org.eugene.webapp.core.mqtt.Subscribe;
@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @Transactional
@@ -56,7 +58,8 @@ public class MqttConnectDao {
     }
 
     @Transactional
-    public List<MqttConnect> findAll() {
-        return entityManager.createQuery("SELECT p FROM MqttConnect p").getResultList();
+    public Set<MqttConnect> findAll() {
+        List<MqttConnect> mqttConnects = entityManager.createQuery("SELECT p FROM MqttConnect p").getResultList();
+        return new HashSet<>(mqttConnects);
     }
 }

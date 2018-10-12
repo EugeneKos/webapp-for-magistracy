@@ -1,6 +1,6 @@
 package org.eugene.webapp.core.mqtt;
 
-import org.eugene.webapp.core.db.services.DbMqttConnectService;
+import org.eugene.webapp.core.dao.MqttConnectDao;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,76 +9,63 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.eugene.webapp.core.printer.PrintInformation.*;
+import static org.eugene.webapp.core.utils.PrintInformation.*;
 
 @Component
 public class MqttConnectOperations {
-    //private Set<MqttConnect> mqttConnects = new HashSet<>();
+    private Set<MqttConnect> mqttConnects = new HashSet<>();
     private MqttConnect currentMqttConnect;
     private final UserOperation userOperation;
-    private final DbMqttConnectService dbMqttConnectService;
+    private final MqttConnectDao mqttConnectDao;
 
     @Autowired
-    public MqttConnectOperations(UserOperation userOperation, DbMqttConnectService dbMqttConnectService) {
+    public MqttConnectOperations(UserOperation userOperation, MqttConnectDao mqttConnectDao) {
         this.userOperation = userOperation;
-        this.dbMqttConnectService = dbMqttConnectService;
+        this.mqttConnectDao = mqttConnectDao;
     }
 
     public void addMqtt(MqttConnect mqttConnect){
-        /*if(mqttConnects.add(mqttConnect)){
-            this.currentMqttConnect = mqttConnect;
-            crudOperationMqttConnectIntoDB("create");
-            printSystemInformation("mqtt connection added");
-        } else {
-            printSystemInformation("mqtt connection with this name already exists");
-        }*/
-        dbMqttConnectService.persist(mqttConnect);
+        if(mqttConnects.add(mqttConnect)){
+            mqttConnectDao.persist(mqttConnect);
+            currentMqttConnect = mqttConnect;
+        }
+
     }
 
     public void removeMqtt(){
-        /*if(mqttConnects.remove(currentMqttConnect)){
-            printSystemInformation("mqtt connection deleted");
-            userOperation.removeMqttConnectFromUsers(currentMqttConnect);
-            crudOperationMqttConnectIntoDB("delete");
-            currentMqttConnect = null;
-        } else{
-            printSystemInformation("mqtt connection does not exist");
-        }*/
         if(currentMqttConnect != null){
-            dbMqttConnectService.removeByMqttName(currentMqttConnect.getMqttName());
+            mqttConnects.remove(currentMqttConnect);
+            mqttConnectDao.removeByMqttName(currentMqttConnect.getMqttName());
+            currentMqttConnect = null;
         }
     }
 
+    public void selectMqtt(String mqttName){
+        for (MqttConnect mqttConnect : mqttConnects) {
+            if(mqttConnect.getMqttName().equals(mqttName)){
+                currentMqttConnect = mqttConnect;
+                printSystemInformation("selected mqtt connect with name < "+mqttName+" >");
+                return;
+            }
+        }
+        printSystemInformation("mqtt connect with name < "+mqttName+" > not found !!!");
+    }
+
     public void startAllMqtt(){
-        Set<MqttConnect> mqttConnects = dbMqttConnectService.findAll();
         for (MqttConnect mqttConnect : mqttConnects){
             mqttConnect.startMqtt();
         }
     }
 
     public void disconnectAllMqtt(){
-        Set<MqttConnect> mqttConnects = dbMqttConnectService.findAll();
         for (MqttConnect mqttConnect : mqttConnects){
             mqttConnect.closeMqtt();
         }
     }
 
-    public void selectMqtt(String mqttName){
-        /*for (MqttConnect mqttConnect : mqttConnects) {
-            if(mqttConnect.getMqttName().equals(mqttName)){
-                this.currentMqttConnect = mqttConnect;
-                printSystemInformation("selected mqtt connection < "+mqttName+" >");
-                return;
-            }
-        }*/
-        currentMqttConnect = dbMqttConnectService.findByMqttName(mqttName);
-        printSystemInformation("mqtt connection does not exist");
-    }
-
-    public MqttConnect getMqttConnectByName(String nameMqtt){
-        Set<MqttConnect> mqttConnects = dbMqttConnectService.findAll();
+    public MqttConnect getMqttConnectByName(String mqttName){
         for (MqttConnect mqttConnect : mqttConnects) {
-            if(mqttConnect.getMqttName().equals(nameMqtt)){
+            if(mqttConnect.getMqttName().equals(mqttName)){
                 return mqttConnect;
             }
         }
@@ -89,61 +76,63 @@ public class MqttConnectOperations {
         return currentMqttConnect;
     }
 
-    //----------------- methods for working Data Base -----------------------------
-
-    public void loadMqttConnectsFromDB(){
-        //mqttConnects.addAll(dbMqttConnectService.findAll());
-    }
-
-    private void crudOperationMqttConnectIntoDB(String crud){
-        if(currentMqttConnect != null){
-            switch (crud){
-                case "create":
-                    dbMqttConnectService.persist(currentMqttConnect);
-                    break;
-                case "delete":
-                    dbMqttConnectService.removeByMqttName(currentMqttConnect.getMqttName());
-                    break;
-            }
+    public void addUserIntoMqttConnectAndUpdate(String mqttName, User user){
+        MqttConnect mqttConnect = mqttConnectDao.findByMqttName(mqttName);
+        if(mqttConnect != null){
+            mqttConnect.getUsers().add(user);
+            mqttConnectDao.update(mqttConnect);
         }
     }
 
-    public void updateMqttConnect(){
-        if(currentMqttConnect != null){
-            dbMqttConnectService.update(currentMqttConnect);
+    public void addSubscribeIntoMqttConnectAndUpdate(String mqttName, String topic){
+        MqttConnect mqttConnect = mqttConnectDao.findByMqttName(mqttName);
+        if(mqttConnect != null){
+            Subscribe subscribe = new Subscribe(topic);
+            subscribe.setMqttConnect(mqttConnect);
+            mqttConnect.getSubscribes().add(subscribe);
+            mqttConnectDao.update(mqttConnect);
         }
     }
 
-    /*public void addSubscribeIntoDB(String mqttName, String subscribe){
-        dbMqttConnectService.addSubscribeAndUpdate(mqttName,subscribe);
+    public void loadMqttConnects(){
+        mqttConnects = new HashSet<>(mqttConnectDao.findAll());
     }
-
-    public void removeSubscribesFromDB(String mqttName, String[] subscribes){
-        for (String subscribe : subscribes){
-            dbMqttConnectService.removeSubscribeAndUpdate(mqttName,subscribe);
-        }
-    }
-
-    public void addUserNameIntoDB(String mqttName, String userLogin){
-        dbMqttConnectService.addUserNameAndUpdate(mqttName,userLogin);
-    }
-
-    public void removeUserNameFromDB(String mqttName, String userLogin){
-        dbMqttConnectService.removeUserNameAndUpdate(mqttName,userLogin);
-    }*/
-
-    //-------------------------------------------------------------------------------
 
     public void removeUserFromAllMqtt(User user){
-        Set<MqttConnect> mqttConnects = dbMqttConnectService.findAll();
         for (MqttConnect mqttConnect : mqttConnects){
             mqttConnect.removeUser(user);
-            //removeUserNameFromDB(mqttConnect.getMqttName(),user.getLogin());
+        }
+        for (MqttConnect mqttConnect : mqttConnectDao.findAll()){
+            mqttConnect.getUsers().remove(user);
+            mqttConnectDao.update(mqttConnect);
+        }
+    }
+
+    public void removeUserFromLinkTable(String mqttName, User user){
+        MqttConnect mqttConnect = mqttConnectDao.findByMqttName(mqttName);
+        if(mqttConnect != null){
+            mqttConnect.getUsers().remove(user);
+            mqttConnectDao.update(mqttConnect);
+        }
+
+    }
+
+    public void removeSubscribes(String[] topics){
+        Set<Subscribe> subscribeSet = new HashSet<>();
+        if(currentMqttConnect != null){
+            for (String topic : topics){
+                for (Subscribe subscribe : currentMqttConnect.getSubscribes()){
+                    if(topic.equals(subscribe.getSubscribe())){
+                        subscribeSet.add(subscribe);
+                        mqttConnectDao.removeSubscribeById(subscribe.getId());
+                    }
+                }
+            }
+            currentMqttConnect.getSubscribes().removeAll(subscribeSet);
         }
     }
 
     public void printAllNameMqttConnections(){
-        Set<MqttConnect> mqttConnects = dbMqttConnectService.findAll();
         if(mqttConnects.isEmpty()){
             printSystemInformation("mqtt connections does not exists");
             return;

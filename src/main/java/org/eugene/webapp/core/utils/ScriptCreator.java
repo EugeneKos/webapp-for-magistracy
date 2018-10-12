@@ -1,8 +1,7 @@
-package org.eugene.webapp.core.parsing;
+package org.eugene.webapp.core.utils;
 
-import org.eugene.webapp.core.parsing.device.Device;
-import org.eugene.webapp.core.parsing.filter.DataFilter;
-import org.eugene.webapp.core.printer.PrintInformation;
+import org.eugene.webapp.core.device.Device;
+import org.eugene.webapp.core.filter.DataFilter;
 import org.eugene.webapp.core.user.User;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -135,7 +134,7 @@ public class ScriptCreator {
 
     //-------------------------------------devices---------------------------------------------------------------
 
-    public static Device createDevice(User user, String scriptName){
+    public static Device createDevice(String scriptName){
         Document document = getDocument(scriptName);
         Device device = null;
         if(document == null) return null;
@@ -145,11 +144,9 @@ public class ScriptCreator {
         Element mqtt = getElement(document.getElementsByTagName("mqtt"));
         String mqttName = mqtt.getAttribute("name");
         String topicName = mqtt.getAttribute("topic");
-        if(user != null && deviceName != null && deviceDescription != null && mqttName != null && topicName != null){
-            device = user.addDevice(deviceName,deviceDescription,mqttName,topicName);
-            if(device != null){
-                device = setCommands(device,document.getElementsByTagName("command"));
-            }
+        if(deviceName != null && deviceDescription != null && mqttName != null && topicName != null){
+            device = new Device(deviceName,deviceDescription,mqttName,topicName);
+            device = setCommands(device,document.getElementsByTagName("command"));
         }
         return device;
     }

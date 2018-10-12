@@ -1,7 +1,5 @@
-package org.eugene.webapp.core.db.dao;
+package org.eugene.webapp.core.dao;
 
-import org.eugene.webapp.core.parsing.device.Device;
-import org.eugene.webapp.core.parsing.filter.DataFilter;
 import org.eugene.webapp.core.user.User;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +8,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @Transactional
@@ -50,23 +50,8 @@ public class UserDao {
     }
 
     @Transactional
-    public void removeFilterById(Long id){
-        DataFilter dataFilter = entityManager.find(DataFilter.class, id);
-        if(dataFilter != null){
-            entityManager.remove(dataFilter);
-        }
-    }
-
-    @Transactional
-    public void removeDeviceById(Long id){
-        Device device = entityManager.find(Device.class, id);
-        if(device != null){
-            entityManager.remove(device);
-        }
-    }
-
-    @Transactional
-    public List<User> findAll() {
-        return entityManager.createQuery("SELECT p FROM User p").getResultList();
+    public Set<User> findAll() {
+        List<User> users = entityManager.createQuery("SELECT p FROM User p").getResultList();
+        return new HashSet<>(users);
     }
 }

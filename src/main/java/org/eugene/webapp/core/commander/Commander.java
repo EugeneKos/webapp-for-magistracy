@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printFormatInformation;
-import static org.eugene.webapp.core.printer.PrintInformation.printCap;
+import static org.eugene.webapp.core.utils.PrintInformation.printFormatInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printCap;
 
 @Component
 public abstract class Commander {

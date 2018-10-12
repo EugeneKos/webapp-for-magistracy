@@ -1,4 +1,4 @@
-package org.eugene.webapp.core.printer;
+package org.eugene.webapp.core.utils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,6 +9,8 @@ public class PrintInformation {
     private static List<String> messageBuffer = new ArrayList<>();
     private static LinkedList<String> operationBuffer = new LinkedList<>();
     private static final int bufferSize = 1000;
+
+    private PrintInformation(){}
 
     public static void addMessageIntoBuffer(String message){
         messageBuffer.add(message);

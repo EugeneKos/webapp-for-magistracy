@@ -1,27 +1,30 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.utils.ScriptCreator;
+import org.eugene.webapp.core.filter.DataFilter;
 import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.utils.PrintInformation.*;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.ScriptCreator.createDataFilter;
 
-public class SetPathToScripts extends TotalUserCom implements Command {
-    public SetPathToScripts(UserOperation userOperation) {
+public class CreateFilter extends TotalUserCom implements Command {
+    public CreateFilter(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "scripts-path";
+        return "filter-cr";
     }
 
     @Override
     public void perform() {
-        ScriptCreator.setPathToScripts(arguments.get(0));
-        printSystemInformation("change path to scripts: "+arguments.get(0));
+        DataFilter dataFilter = createDataFilter(arguments.get(0));
+        if(dataFilter != null){
+            userOperation.addDataFilterIntoDB(dataFilter);
+        }
     }
 
     @Override
@@ -35,6 +38,6 @@ public class SetPathToScripts extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "scripts-path [path to scripts]";
+        return "filter-cr [file script name]";
     }
 }

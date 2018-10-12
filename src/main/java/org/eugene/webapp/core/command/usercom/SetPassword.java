@@ -6,7 +6,7 @@ import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class SetPassword extends TotalUserCom implements Command {
     public SetPassword(UserOperation userOperation) {
@@ -24,8 +24,7 @@ public class SetPassword extends TotalUserCom implements Command {
         if(user != null){
             if(arguments.get(0).equals(user.getPassword())){
                 user.setPassword(arguments.get(1));
-                //userOperation.easyUpdateIntoDB();
-                userOperation.updateUser();
+                userOperation.updateUserInDB();
                 printSystemInformation("password changed");
             } else {
                 printSystemInformation("old password is incorrect");

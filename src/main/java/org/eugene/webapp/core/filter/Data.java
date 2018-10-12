@@ -1,4 +1,4 @@
-package org.eugene.webapp.core.parsing.filter;
+package org.eugene.webapp.core.filter;
 
 import java.util.Map;
 

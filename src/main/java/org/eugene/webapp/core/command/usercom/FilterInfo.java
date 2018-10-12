@@ -1,14 +1,14 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.parsing.filter.DataFilter;
+import org.eugene.webapp.core.filter.DataFilter;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.addMessagesIntoBuffer;
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.addMessagesIntoBuffer;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class FilterInfo extends TotalUserCom implements Command {
     public FilterInfo(UserOperation userOperation) {
@@ -22,34 +22,18 @@ public class FilterInfo extends TotalUserCom implements Command {
 
     @Override
     public void perform() {
-        if (arguments.size() == 1) {
-            User user = userOperation.getCurrentUser();
-            if (user != null) {
-                DataFilter dataFilter = user.getFilterByName(arguments.get(0));
-                if (dataFilter != null) {
-                    System.out.println(dataFilter);
-                    addMessagesIntoBuffer(dataFilter.getFilterInfo());
-                    userOperation.setDataFilter(dataFilter);
-                } else {
-                    printSystemInformation("filter not found");
-                }
-            } else {
-                printSystemInformation("user not found !!!");
-            }
-        } else if (arguments.size() == 0) {
-            DataFilter dataFilter = userOperation.getDataFilter();
-            if (dataFilter != null) {
-                System.out.println(dataFilter);
-                addMessagesIntoBuffer(dataFilter.getFilterInfo());
-            } else {
-                printSystemInformation("filter not found");
-            }
+        DataFilter dataFilter = userOperation.getDataFilterByName(arguments.get(0));
+        if(dataFilter != null){
+            System.out.println(dataFilter);
+            addMessagesIntoBuffer(dataFilter.getFilterInfo());
+        } else {
+            printSystemInformation("filter bot found");
         }
     }
 
     @Override
     public boolean checkArgs(List<String> arguments) {
-        if (arguments.size() <= 1) {
+        if (arguments.size() == 1) {
             super.arguments = arguments;
             return true;
         }
@@ -58,6 +42,6 @@ public class FilterInfo extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "filter-info [] [filter name]";
+        return "filter-info [filter name]";
     }
 }

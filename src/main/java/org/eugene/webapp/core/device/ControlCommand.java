@@ -1,7 +1,6 @@
-package org.eugene.webapp.core.parsing.device;
+package org.eugene.webapp.core.device;
 
 import javax.persistence.*;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +21,7 @@ public class ControlCommand {
     private String commandText;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Device device;
-
+    @Transient
     private final String changeValueToken = "--value";
 
     public ControlCommand(String name, String params, String description, String commandText) {
@@ -31,6 +30,8 @@ public class ControlCommand {
         this.description = description;
         this.commandText = commandText;
     }
+
+    public ControlCommand() {}
 
     public Long getId() {
         return id;
@@ -54,6 +55,14 @@ public class ControlCommand {
 
     public String getCommandText(){
         return commandText;
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
     }
 
     public void setChangesValue(String... params){
