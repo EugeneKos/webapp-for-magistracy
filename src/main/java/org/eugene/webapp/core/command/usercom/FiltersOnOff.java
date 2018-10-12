@@ -15,7 +15,7 @@ public class FiltersOnOff extends TotalUserCom implements Command {
 
     @Override
     public String getName() {
-        return "filters";
+        return "filters-usr";
     }
 
     @Override
@@ -46,6 +46,6 @@ public class FiltersOnOff extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "filters [param on/off]";
+        return "filters-usr [param on/off]";
     }
 }

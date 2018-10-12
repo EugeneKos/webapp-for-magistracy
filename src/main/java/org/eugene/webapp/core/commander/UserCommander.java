@@ -37,5 +37,7 @@ public class UserCommander extends Commander {
         addCommand(new RemoveDeviceFromUser(userOperation));
         addCommand(new RemoveDevice(userOperation));
         addCommand(new DeviceInfo(userOperation));
+        addCommand(new Devices(userOperation));
+        addCommand(new Filters(userOperation));
     }
 }

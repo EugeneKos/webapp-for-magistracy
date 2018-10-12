@@ -28,7 +28,7 @@ public class RemoveUser extends TotalMqttCom implements Command {
             MqttConnect currentMqttConnect = mqttConnectOperations.getCurrentMqttConnect();
             if(currentMqttConnect != null){
                 currentMqttConnect.removeUser(user);
-                mqttConnectOperations.removeUserFromLinkTable(currentMqttConnect.getMqttName(),user);
+                mqttConnectOperations.removeUserNameFromLinkTable(currentMqttConnect.getMqttName(),user.getLogin());
             } else {
                 printSystemInformation("mqtt connection does not exist");
             }

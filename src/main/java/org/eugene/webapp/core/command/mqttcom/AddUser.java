@@ -29,7 +29,7 @@ public class AddUser extends TotalMqttCom implements Command {
             MqttConnect currentMqttConnect = mqttConnectOperations.getCurrentMqttConnect();
             if(currentMqttConnect != null){
                 currentMqttConnect.addUser(user);
-                mqttConnectOperations.addUserIntoMqttConnectAndUpdate(currentMqttConnect.getMqttName(),userOperation.getUserByLoginFromDB(user.getLogin()));
+                mqttConnectOperations.addUserNameIntoMqttConnectAndUpdate(currentMqttConnect.getMqttName(),user.getLogin());
             } else {
                 printSystemInformation("mqtt connection does not exist");
             }

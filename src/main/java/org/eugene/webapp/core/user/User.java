@@ -27,7 +27,8 @@ public class User {
     @Column(name = "buffer")
     private Integer bufferSize;
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    /*@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)*/
+    @Transient
     private Set<MqttConnect> mqttConnects = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER/*, cascade = CascadeType.MERGE*/)

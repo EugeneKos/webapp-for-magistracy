@@ -1,7 +1,6 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.utils.ScriptCreator;
 import org.eugene.webapp.core.device.Device;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
@@ -28,9 +27,6 @@ public class AddDeviceIntoUser extends TotalUserCom implements Command {
             if(device != null){
                 user.addDevice(device);
                 userOperation.addDeviceIntoUserAndUpdate(device);
-                printSystemInformation("device added");
-            } else {
-                printSystemInformation("device not found");
             }
         } else {
             printSystemInformation("user not found !!!");

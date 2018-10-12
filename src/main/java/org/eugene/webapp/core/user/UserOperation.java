@@ -3,8 +3,11 @@ package org.eugene.webapp.core.user;
 import org.eugene.webapp.core.dao.DataFilterDao;
 import org.eugene.webapp.core.dao.DeviceDao;
 import org.eugene.webapp.core.dao.UserDao;
+import org.eugene.webapp.core.dao.UserNameEntityDao;
 import org.eugene.webapp.core.device.Device;
 import org.eugene.webapp.core.filter.DataFilter;
+import org.eugene.webapp.core.mqtt.MqttConnect;
+import org.eugene.webapp.core.mqtt.UserNameEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +24,14 @@ public class UserOperation {
     private final UserDao userDao;
     private final DeviceDao deviceDao;
     private final DataFilterDao dataFilterDao;
+    private final UserNameEntityDao userNameEntityDao;
 
     @Autowired
-    public UserOperation(UserDao userDao, DeviceDao deviceDao, DataFilterDao dataFilterDao) {
+    public UserOperation(UserDao userDao, DeviceDao deviceDao, DataFilterDao dataFilterDao, UserNameEntityDao userNameEntityDao) {
         this.userDao = userDao;
         this.deviceDao = deviceDao;
         this.dataFilterDao = dataFilterDao;
+        this.userNameEntityDao = userNameEntityDao;
     }
 
     public void setDataFilter(DataFilter dataFilter) {
@@ -44,6 +49,7 @@ public class UserOperation {
     public void addUser(User user) {
         if(users.add(user)){
             userDao.persist(user);
+            userNameEntityDao.persist(new UserNameEntity(user.getLogin()));
             currentUser = user;
             printSystemInformation("user added");
         } else {
@@ -52,7 +58,6 @@ public class UserOperation {
     }
 
     public void selectUser(String login) {
-        currentUser = userDao.findByLogin(login);
         for (User user : users){
             if(user.getLogin().equals(login)){
                 currentUser = user;
@@ -68,6 +73,7 @@ public class UserOperation {
             if(currentUser.isMqttConnectsEmpty()){
                 users.remove(currentUser);
                 userDao.removeByLogin(currentUser.getLogin());
+                userNameEntityDao.removeByUserName(currentUser.getLogin());
                 printSystemInformation("current user deleted");
                 currentUser = null;
             } else {
@@ -76,6 +82,10 @@ public class UserOperation {
         } else {
             printSystemInformation("current user not found !!!");
         }
+    }
+
+    public UserNameEntity getUserNameEntityByUserName(String userName){
+        return userNameEntityDao.findByUserName(userName);
     }
 
     public User getUserByLogin(String login) {
@@ -103,13 +113,7 @@ public class UserOperation {
         }
     }
 
-    public void addFilterIntoUserAndUpdate(DataFilter dataFilter){
-        User user = userDao.findByLogin(currentUser.getLogin());
-        if(user != null){
-            user.getFilters().add(dataFilter);
-            userDao.update(user);
-        }
-    }
+    //--------------------------------devices------------------------------------------------
 
     public void addDeviceIntoUserAndUpdate(Device device){
         User user = userDao.findByLogin(currentUser.getLogin());
@@ -118,9 +122,6 @@ public class UserOperation {
             userDao.update(user);
         }
     }
-
-
-    //--------------------------------devices------------------------------------------------
 
     public void addDeviceIntoDB(Device device){
         if(getDeviceByName(device.getName()) == null){
@@ -163,6 +164,14 @@ public class UserOperation {
     //--------------------------------------------------------------------------------------
 
     //--------------------------------filters-----------------------------------------------
+
+    public void addFilterIntoUserAndUpdate(DataFilter dataFilter){
+        User user = userDao.findByLogin(currentUser.getLogin());
+        if(user != null){
+            user.getFilters().add(dataFilter);
+            userDao.update(user);
+        }
+    }
 
     public void addDataFilterIntoDB(DataFilter dataFilter){
         if(getDataFilterByName(dataFilter.getName()) == null){
@@ -208,6 +217,12 @@ public class UserOperation {
         users = new HashSet<>(userDao.findAll());
     }
 
+    public void removeMqttConnectFromAllUsers(MqttConnect mqttConnect){
+        for (User user : users){
+            user.removeMqttConnect(mqttConnect);
+        }
+    }
+
     public void printAllUsers() {
         if (users.isEmpty()) {
             printSystemInformation("users not found !!!");
@@ -216,6 +231,32 @@ public class UserOperation {
         printCap();
         for (User user : users) {
             printFormatInformation(user.getLogin());
+        }
+        printCap();
+    }
+
+    public void printAllDevices(){
+        Set<Device> devices = deviceDao.findAll();
+        if(devices.isEmpty()){
+            printSystemInformation("devices not found !!!");
+            return;
+        }
+        printCap();
+        for (Device device : devices) {
+            printFormatInformation(device.getName());
+        }
+        printCap();
+    }
+
+    public void printAllDataFilters(){
+        Set<DataFilter> filters = dataFilterDao.findAll();
+        if(filters.isEmpty()){
+            printSystemInformation("filters not found !!!");
+            return;
+        }
+        printCap();
+        for (DataFilter filter : filters) {
+            printFormatInformation(filter.getName());
         }
         printCap();
     }

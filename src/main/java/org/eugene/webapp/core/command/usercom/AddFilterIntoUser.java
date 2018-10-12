@@ -7,7 +7,6 @@ import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.utils.ScriptCreator.createDataFilter;
 import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class AddFilterIntoUser extends TotalUserCom implements Command {
@@ -28,9 +27,6 @@ public class AddFilterIntoUser extends TotalUserCom implements Command {
             if(dataFilter != null){
                 user.addFilter(dataFilter);
                 userOperation.addFilterIntoUserAndUpdate(dataFilter);
-                printSystemInformation("filter added");
-            } else {
-                printSystemInformation("filter not found");
             }
         } else {
             printSystemInformation("user not found !!!");

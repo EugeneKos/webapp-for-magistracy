@@ -24,11 +24,18 @@ public class MqttConnect {
     @Column(name = "clientId")
     private String clientId; // = "JavaSample"; // Идентификатор клиента
 
-    @ManyToMany(fetch = FetchType.EAGER/*, cascade = CascadeType.MERGE*/)
+    /*@ManyToMany(fetch = FetchType.EAGER*//*, cascade = CascadeType.MERGE*//*)
     @JoinTable(name = "MqttConnects_Users",
             joinColumns = @JoinColumn(name = "MqttConnect_ID"),
-            inverseJoinColumns = @JoinColumn(name = "User_ID"))
+            inverseJoinColumns = @JoinColumn(name = "User_ID"))*/
+    @Transient
     private Set<User> users = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER/*, cascade = CascadeType.MERGE*/)
+    @JoinTable(name = "MqttConnects_UserNames",
+            joinColumns = @JoinColumn(name = "MqttConnect_ID"),
+            inverseJoinColumns = @JoinColumn(name = "UserName_ID"))
+    private Set<UserNameEntity> userNameEntities = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "mqttConnect")
     private Set<Subscribe> subscribes = new HashSet<>();
@@ -142,7 +149,6 @@ public class MqttConnect {
         try {
             sampleClient.subscribe(topic,qos);
             Subscribe subscribe = new Subscribe(topic);
-            //subscribe.setSubscribe(topic);
             subscribe.setMqttConnect(this);
             subscribes.add(subscribe);
             System.out.println("Subscribe to: "+topic);
@@ -252,6 +258,14 @@ public class MqttConnect {
 
     public void setSubscribes(Set<Subscribe> subscribes) {
         this.subscribes = subscribes;
+    }
+
+    public void setUserNameEntities(Set<UserNameEntity> userNameEntities) {
+        this.userNameEntities = userNameEntities;
+    }
+
+    public Set<UserNameEntity> getUserNameEntities() {
+        return userNameEntities;
     }
 
     public String isConnected(){

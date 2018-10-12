@@ -18,16 +18,12 @@ public class LoadData extends TotalMqttCom implements Command {
     @Override
     public void perform() {
         mqttConnectOperations.getUserOperation().loadUsersFromDB();
-        mqttConnectOperations.loadMqttConnects();
+        mqttConnectOperations.loadMqttConnectsFromDB();
     }
 
     @Override
     public boolean checkArgs(List<String> arguments) {
-        if (arguments.size() == 0) {
-            super.arguments = arguments;
-            return true;
-        }
-        return false;
+        return arguments.size() == 0;
     }
 
     @Override

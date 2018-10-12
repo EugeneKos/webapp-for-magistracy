@@ -145,6 +145,14 @@ public class DataFilter {
         this.converters = converters;
     }
 
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -189,6 +197,7 @@ public class DataFilter {
     public List<String> getFilterInfo(){
         List<String> filterInfo = new ArrayList<>();
         filterInfo.add("------------------------------------------------");
+        filterInfo.add("[Name: "+name+"]");
         filterInfo.add("[Mqtt name: "+mqttName+"]");
         filterInfo.add("[Topic name: "+topicName+"]");
         filterInfo.addAll(addKeyValueRegexpInfoIntoList());
@@ -199,6 +208,7 @@ public class DataFilter {
     @Override
     public String toString() {
         return "------------------------------------------------"+System.lineSeparator()+
+                "[Name: "+name+"]"+System.lineSeparator()+
                 "[Mqtt name: "+mqttName+"]"+System.lineSeparator()+
                 "[Topic name: "+topicName+"]"+System.lineSeparator()+
                 getKeyValueRegexpInfo()+

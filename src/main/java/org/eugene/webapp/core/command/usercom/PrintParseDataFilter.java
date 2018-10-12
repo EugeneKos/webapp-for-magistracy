@@ -25,7 +25,6 @@ public class PrintParseDataFilter extends TotalUserCom implements Command {
             User user = userOperation.getCurrentUser();
             if (user != null) {
                 DataFilter dataFilter = user.getFilterByName(arguments.get(0));
-                // todo: проверить метод
                 if (dataFilter != null) {
                     dataFilter.setResolutionPrint(true);
                     userOperation.setDataFilter(dataFilter);
