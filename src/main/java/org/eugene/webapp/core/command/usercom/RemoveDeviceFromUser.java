@@ -24,7 +24,9 @@ public class RemoveDeviceFromUser extends TotalUserCom implements Command {
         User user = userOperation.getCurrentUser();
         if(user != null){
             Device device = user.removeDevice(arguments.get(0));
-            userOperation.removeDeviceFromLinkTable(user.getLogin(),device);
+            if(device != null){
+                userOperation.removeDeviceFromLinkTable(user.getLogin(),device);
+            }
         } else {
             printSystemInformation("user not found !!!");
         }

@@ -27,7 +27,7 @@ public class FilterInfo extends TotalUserCom implements Command {
             System.out.println(dataFilter);
             addMessagesIntoBuffer(dataFilter.getFilterInfo());
         } else {
-            printSystemInformation("filter bot found");
+            printSystemInformation("filter not found");
         }
     }
 

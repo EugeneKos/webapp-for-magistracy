@@ -24,14 +24,10 @@ public class MqttConnect {
     @Column(name = "clientId")
     private String clientId; // = "JavaSample"; // Идентификатор клиента
 
-    /*@ManyToMany(fetch = FetchType.EAGER*//*, cascade = CascadeType.MERGE*//*)
-    @JoinTable(name = "MqttConnects_Users",
-            joinColumns = @JoinColumn(name = "MqttConnect_ID"),
-            inverseJoinColumns = @JoinColumn(name = "User_ID"))*/
     @Transient
     private Set<User> users = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER/*, cascade = CascadeType.MERGE*/)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "MqttConnects_UserNames",
             joinColumns = @JoinColumn(name = "MqttConnect_ID"),
             inverseJoinColumns = @JoinColumn(name = "UserName_ID"))

@@ -27,17 +27,16 @@ public class User {
     @Column(name = "buffer")
     private Integer bufferSize;
 
-    /*@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)*/
     @Transient
     private Set<MqttConnect> mqttConnects = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER/*, cascade = CascadeType.MERGE*/)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "Users_Filters",
             joinColumns = @JoinColumn(name = "User_ID"),
             inverseJoinColumns = @JoinColumn(name = "Filter_ID"))
     private Set<DataFilter> filters = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER/*, cascade = CascadeType.MERGE*/)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "Users_Devices",
             joinColumns = @JoinColumn(name = "User_ID"),
             inverseJoinColumns = @JoinColumn(name = "Device_ID"))

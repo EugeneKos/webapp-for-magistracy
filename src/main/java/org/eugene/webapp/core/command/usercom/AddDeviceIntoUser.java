@@ -27,6 +27,8 @@ public class AddDeviceIntoUser extends TotalUserCom implements Command {
             if(device != null){
                 user.addDevice(device);
                 userOperation.addDeviceIntoUserAndUpdate(device);
+            } else {
+                printSystemInformation("device with name < "+arguments.get(0)+" > not found in data base");
             }
         } else {
             printSystemInformation("user not found !!!");

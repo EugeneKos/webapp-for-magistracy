@@ -7,6 +7,8 @@ import org.eugene.webapp.core.utils.ScriptCreator;
 
 import java.util.List;
 
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
+
 public class CreateDevice extends TotalUserCom implements Command {
     public CreateDevice(UserOperation userOperation) {
         super(userOperation);
@@ -22,6 +24,8 @@ public class CreateDevice extends TotalUserCom implements Command {
         Device device = ScriptCreator.createDevice(arguments.get(0));
         if(device != null){
             userOperation.addDeviceIntoDB(device);
+        } else {
+            printSystemInformation("error create device, device was not created");
         }
     }
 

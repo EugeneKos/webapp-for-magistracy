@@ -5,6 +5,8 @@ import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
+
 public class LoadData extends TotalMqttCom implements Command {
     public LoadData(MqttConnectOperations mqttConnectOperations) {
         super(mqttConnectOperations);
@@ -19,6 +21,7 @@ public class LoadData extends TotalMqttCom implements Command {
     public void perform() {
         mqttConnectOperations.getUserOperation().loadUsersFromDB();
         mqttConnectOperations.loadMqttConnectsFromDB();
+        printSystemInformation("loading is complete");
     }
 
     @Override

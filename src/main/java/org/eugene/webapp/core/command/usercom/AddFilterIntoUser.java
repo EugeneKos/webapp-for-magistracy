@@ -27,6 +27,8 @@ public class AddFilterIntoUser extends TotalUserCom implements Command {
             if(dataFilter != null){
                 user.addFilter(dataFilter);
                 userOperation.addFilterIntoUserAndUpdate(dataFilter);
+            } else {
+                printSystemInformation("filter with name < "+arguments.get(0)+" > not found in data base");
             }
         } else {
             printSystemInformation("user not found !!!");

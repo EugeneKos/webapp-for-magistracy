@@ -24,7 +24,9 @@ public class RemoveFilterFromUser extends TotalUserCom implements Command {
         User user = userOperation.getCurrentUser();
         if(user != null){
             DataFilter dataFilter = user.removeFilter(arguments.get(0));
-            userOperation.removeDataFilterFromLinkTable(user.getLogin(),dataFilter);
+            if(dataFilter != null){
+                userOperation.removeDataFilterFromLinkTable(user.getLogin(),dataFilter);
+            }
         } else {
             printSystemInformation("user not found !!!");
         }
