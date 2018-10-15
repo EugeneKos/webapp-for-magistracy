@@ -2,7 +2,6 @@ package org.eugene.webapp.core.utils;
 
 import org.eugene.webapp.core.device.Device;
 import org.eugene.webapp.core.filter.DataFilter;
-import org.eugene.webapp.core.user.User;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -69,12 +68,15 @@ public class ScriptCreator {
         Document document = getDocument(scriptName);
         if(document == null) return null;
         Element mqtt = getElement(document.getElementsByTagName("mqtt"));
-        String mqttName = mqtt.getAttribute("name");
-        String topicName = mqtt.getAttribute("topic");
+        String mqttName = "";
+        String topicName = "";
+        if(mqtt != null){
+            mqttName = mqtt.getAttribute("name");
+            topicName = mqtt.getAttribute("topic");
+        }
         String name = getValueFromSimpleTag(document.getElementsByTagName("name"));
         String dataForFormat = getValueFromSimpleTag(document.getElementsByTagName("data-for-format"));
-
-        if(mqttName != null && topicName != null && dataForFormat != null){
+        if(!mqttName.equals("") && !topicName.equals("") && dataForFormat != null && name != null){
             dataFilter = new DataFilter(name,topicName,mqttName);
             dataFilter = setKeyValues(dataFilter, document.getElementsByTagName("key-values"), dataForFormat);
         }
@@ -103,7 +105,7 @@ public class ScriptCreator {
                 if(key != null && beginNonChangeValue != null && finalNonChangeValue != null){
                     if(checkChangeElement(dataForFormat,beginNonChangeValue,finalNonChangeValue)){
                         dataFilter.addKeyValueRegexp(key,getRegexp(beginNonChangeValue,finalNonChangeValue));
-                        setConverters(dataFilter,element.getElementsByTagName("converter"),key);
+                        dataFilter = setConverters(dataFilter,element.getElementsByTagName("converter"),key);
                     }
                 }
             }
@@ -139,12 +141,20 @@ public class ScriptCreator {
         Device device = null;
         if(document == null) return null;
         Element deviceElement = getElement(document.getElementsByTagName("device"));
-        String deviceName = deviceElement.getAttribute("name");
-        String deviceDescription = deviceElement.getAttribute("description");
+        String deviceName = "";
+        String deviceDescription = "";
+        if(deviceElement != null){
+            deviceName = deviceElement.getAttribute("name");
+            deviceDescription = deviceElement.getAttribute("description");
+        }
         Element mqtt = getElement(document.getElementsByTagName("mqtt"));
-        String mqttName = mqtt.getAttribute("name");
-        String topicName = mqtt.getAttribute("topic");
-        if(deviceName != null && deviceDescription != null && mqttName != null && topicName != null){
+        String mqttName = "";
+        String topicName = "";
+        if(mqtt != null){
+            mqttName = mqtt.getAttribute("name");
+            topicName = mqtt.getAttribute("topic");
+        }
+        if(!deviceName.equals("") && !deviceDescription.equals("") && !mqttName.equals("") && !topicName.equals("")){
             device = new Device(deviceName,deviceDescription,mqttName,topicName);
             device = setCommands(device,document.getElementsByTagName("command"));
         }
