@@ -40,6 +40,6 @@ public class CreateFilter extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "filter-cr [file script name]";
+        return "filter-cr [script file name]";
     }
 }

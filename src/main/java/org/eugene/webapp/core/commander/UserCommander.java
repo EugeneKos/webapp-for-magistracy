@@ -40,5 +40,7 @@ public class UserCommander extends Commander {
         addCommand(new Devices(userOperation));
         addCommand(new Filters(userOperation));
         addCommand(new PathToScriptsInfo(userOperation));
+        addCommand(new ScriptFiles(userOperation));
+        addCommand(new RemoveScriptFile(userOperation));
     }
 }

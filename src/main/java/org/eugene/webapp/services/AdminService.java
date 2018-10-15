@@ -29,4 +29,8 @@ public class AdminService {
     public void setPathToScripts(String path){
         ScriptCreator.setPathToScripts(path);
     }
+
+    public String getPathToScripts(){
+        return ScriptCreator.getPathToScripts();
+    }
 }
