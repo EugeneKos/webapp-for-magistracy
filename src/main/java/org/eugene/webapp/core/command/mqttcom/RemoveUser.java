@@ -8,7 +8,7 @@ import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class RemoveUser extends TotalMqttCom implements Command {
     public RemoveUser(MqttConnectOperations mqttConnectOperations) {
@@ -28,8 +28,7 @@ public class RemoveUser extends TotalMqttCom implements Command {
             MqttConnect currentMqttConnect = mqttConnectOperations.getCurrentMqttConnect();
             if(currentMqttConnect != null){
                 currentMqttConnect.removeUser(user);
-                mqttConnectOperations.saveMqttConnects();
-                mqttConnectOperations.removeUserNameFromDB(currentMqttConnect.getMqttName(),user.getLogin());
+                mqttConnectOperations.removeUserNameFromLinkTable(currentMqttConnect.getMqttName(),user.getLogin());
             } else {
                 printSystemInformation("mqtt connection does not exist");
             }

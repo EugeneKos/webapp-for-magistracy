@@ -5,6 +5,8 @@ import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
+
 public class LoadData extends TotalMqttCom implements Command {
     public LoadData(MqttConnectOperations mqttConnectOperations) {
         super(mqttConnectOperations);
@@ -17,31 +19,18 @@ public class LoadData extends TotalMqttCom implements Command {
 
     @Override
     public void perform() {
-        if (arguments.size() == 0) {
-            mqttConnectOperations.getUserOperation().loadUsers();
-            mqttConnectOperations.loadMqttConnects();
-        }
-        if (arguments.size() == 1 && arguments.get(0).equals("base")) {
-            mqttConnectOperations.getUserOperation().loadUsersFromDB();
-            mqttConnectOperations.loadMqttConnectsFromDB();
-        }
+        mqttConnectOperations.getUserOperation().loadUsersFromDB();
+        mqttConnectOperations.loadMqttConnectsFromDB();
+        printSystemInformation("loading is complete");
     }
 
     @Override
     public boolean checkArgs(List<String> arguments) {
-        if (arguments.size() == 1 && arguments.get(0).equals("base")) {
-            super.arguments = arguments;
-            return true;
-        }
-        if (arguments.size() == 0) {
-            super.arguments = arguments;
-            return true;
-        }
-        return false;
+        return arguments.size() == 0;
     }
 
     @Override
     public String getDescriptionCommand() {
-        return "load [] [base]";
+        return "load []";
     }
 }

@@ -1,1 +1,0 @@
-[{"mqttName":"name_2","broker":"tcp://test.mosquitto.org:1883","clientId":"java_2","userNames":["dima","eugene"],"setSubscribes":["#"]},{"mqttName":"name","broker":"tcp://iot.eclipse.org:1883","clientId":"java","userNames":["dima","eugene"],"setSubscribes":["#"]}]

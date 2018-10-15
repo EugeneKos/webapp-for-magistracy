@@ -1,12 +1,12 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.parsing.ScriptCreator;
+import org.eugene.webapp.core.utils.ScriptCreator;
 import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.*;
+import static org.eugene.webapp.core.utils.PrintInformation.*;
 
 public class SetPathToScripts extends TotalUserCom implements Command {
     public SetPathToScripts(UserOperation userOperation) {

@@ -6,8 +6,8 @@ import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.addMessagesIntoBuffer;
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.addMessagesIntoBuffer;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class UserInfo extends TotalUserCom implements Command {
     public UserInfo(UserOperation userOperation) {

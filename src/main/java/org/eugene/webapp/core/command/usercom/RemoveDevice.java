@@ -1,13 +1,9 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.parsing.device.Device;
-import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
-
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
 
 public class RemoveDevice extends TotalUserCom implements Command {
     public RemoveDevice(UserOperation userOperation) {
@@ -21,14 +17,7 @@ public class RemoveDevice extends TotalUserCom implements Command {
 
     @Override
     public void perform() {
-        User user = userOperation.getCurrentUser();
-        if(user != null){
-            Device device = user.removeDevice(arguments.get(0));
-            userOperation.saveUsers();
-            userOperation.removeDeviceFromDB(user.getLogin(),device);
-        } else {
-            printSystemInformation("user not found !!!");
-        }
+        userOperation.removeDeviceFromDB(arguments.get(0));
     }
 
     @Override

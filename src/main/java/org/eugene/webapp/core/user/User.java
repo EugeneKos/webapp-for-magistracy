@@ -1,35 +1,73 @@
 package org.eugene.webapp.core.user;
 
-import org.eugene.webapp.core.parsing.device.Device;
+import org.eugene.webapp.core.device.Device;
 import org.eugene.webapp.core.mqtt.MqttConnect;
-import org.eugene.webapp.core.parsing.filter.DataFilter;
-import org.eugene.webapp.core.parsing.filter.Data;
-import org.eugene.webapp.core.printer.PrintInformation;
+import org.eugene.webapp.core.filter.DataFilter;
+import org.eugene.webapp.core.filter.Data;
+import org.eugene.webapp.core.utils.PrintInformation;
 
+import javax.persistence.*;
 import java.util.*;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+    @Column(name = "login", unique = true)
     private String login;
+    @Column(name = "password")
     private String password;
-    private int bufferSize;
+    @Column(name = "role")
     private String role;
+    @Column(name = "buffer")
+    private Integer bufferSize;
+
+    @Transient
     private Set<MqttConnect> mqttConnects = new HashSet<>();
-    private Map<String, DataFilter> filters = new HashMap<>();
-    private LinkedList<Data> queueData = new LinkedList<>();
-    private Map<String,Data> inputData = new HashMap<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(name = "Users_Filters",
+            joinColumns = @JoinColumn(name = "User_ID"),
+            inverseJoinColumns = @JoinColumn(name = "Filter_ID"))
+    private Set<DataFilter> filters = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(name = "Users_Devices",
+            joinColumns = @JoinColumn(name = "User_ID"),
+            inverseJoinColumns = @JoinColumn(name = "Device_ID"))
     private Set<Device> devices = new HashSet<>();
+
+    @Transient
+    private LinkedList<Data> queueData = new LinkedList<>();
+    @Transient
+    private Map<String,Data> inputData = new HashMap<>();
+    @Transient
     private final Object monitor = new Object();
+    @Transient
     private boolean resolutionPrint = false;
+    @Transient
     private boolean isFilters = true;
-    public static final String delimiter = "@";
 
     public User(String login, String password, String role, int bufferSize) {
         this.login = login;
         this.password = password;
         this.role = role;
         this.bufferSize = bufferSize;
+    }
+
+    public User() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setBufferSize(int bufferSize) {
@@ -43,12 +81,48 @@ public class User {
         }
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public int getBufferSize() {
+        return bufferSize;
+    }
+
+    public String getLogin() {
+        return login;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Set<MqttConnect> getMqttConnects() {
+        return mqttConnects;
+    }
+
+    public Set<DataFilter> getFilters() {
+        return filters;
+    }
+
+    public void setFilters(Set<DataFilter> filters) {
+        this.filters = filters;
+    }
+
+    public Set<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(Set<Device> devices) {
+        this.devices = devices;
     }
 
     public boolean isMqttConnectsEmpty(){
@@ -63,10 +137,11 @@ public class User {
         this.isFilters = isFilters;
     }
 
+    //--------------------------------------filters-----------------------------------------------
+
     public void addFilter(DataFilter dataFilter) {
-        String filterName = dataFilter.getMqttName()+delimiter+ dataFilter.getTopicName();
-        if(!filters.keySet().contains(filterName)){
-            filters.put(filterName, dataFilter);
+        String filterName = dataFilter.getName();
+        if(filters.add(dataFilter)){
             printSystemInformation("filter added");
         } else {
             printSystemInformation("filter with name < " + filterName + " > already exist");
@@ -75,16 +150,28 @@ public class User {
     }
 
     public DataFilter removeFilter(String filterName) {
-        DataFilter dataFilter = null;
-        if (filters.keySet().contains(filterName)) {
-            dataFilter = filters.remove(filterName);
-            inputData.remove(filterName);
-            printSystemInformation("filter with name < " + filterName + " > deleted");
-        } else {
-            printSystemInformation("filter with name < " + filterName + " > does not exist");
+        for (DataFilter dataFilter : filters){
+            if(dataFilter.getName().equals(filterName)){
+                filters.remove(dataFilter);
+                inputData.remove(filterName);
+                printSystemInformation("filter with name < " + filterName + " > deleted");
+                return dataFilter;
+            }
         }
-        return dataFilter;
+        printSystemInformation("filter with name < " + filterName + " > does not exist");
+        return null;
     }
+
+    public DataFilter getFilterByName(String filterName){
+        for (DataFilter dataFilter : filters){
+            if(dataFilter.getName().equals(filterName)){
+                return dataFilter;
+            }
+        }
+        return null;
+    }
+
+    //----------------------------------------------------------------------------------------
 
     public void addMqttConnect(MqttConnect mqttConnect) {
         mqttConnects.add(mqttConnect);
@@ -94,18 +181,19 @@ public class User {
         mqttConnects.remove(mqttConnect);
     }
 
-    public void addIntoQueue(String nameMqtt, String topic, String message) {
-        DataFilter dataFilter = filters.get(nameMqtt+delimiter+topic);
-        if (dataFilter != null) {
-            synchronized (monitor) {
-                if (queueData.size() >= bufferSize) {
-                    queueData.removeLast();
+    public void addIntoQueue(String mqttName, String topic, String message) {
+        for (DataFilter dataFilter : filters){
+            if (dataFilter.getMqttName().equals(mqttName) && dataFilter.getTopicName().equals(topic)) {
+                synchronized (monitor) {
+                    if (queueData.size() >= bufferSize) {
+                        queueData.removeLast();
+                    }
+                    queueData.addFirst(dataFilter.filter(message));
+                    if(resolutionPrint){
+                        showQueue();
+                    }
+                    inputData.put(dataFilter.getName(), dataFilter.filter(message));
                 }
-                queueData.addFirst(dataFilter.filter(message));
-                if(resolutionPrint){
-                    showQueue();
-                }
-                inputData.put(nameMqtt+delimiter+topic, dataFilter.filter(message));
             }
         }
     }
@@ -130,21 +218,21 @@ public class User {
         return statusMqttConnects;
     }
 
-    public Device addDevice(String deviceName, String deviceDescription, String mqttName, String topic){
+    //-----------------------------------------devices-----------------------------------------------
+
+    public void addDevice(Device device){
         for (MqttConnect mqttConnect : mqttConnects){
-            if(mqttConnect.getMqttName().equals(mqttName)){
-                Device device = new Device(deviceName,deviceDescription,mqttName,topic);
+            if(mqttConnect.getMqttName().equals(device.getMqttName())){
                 if(devices.add(device)){
-                    printSystemInformation("device with name < "+deviceName+" > added");
-                    return device;
+                    printSystemInformation("device with name < "+device.getName()+" > added");
                 } else {
-                    printSystemInformation("device with name < "+deviceName+" > already exist");
+                    printSystemInformation("device with name < "+device.getName()+" > already exist");
                 }
+                return;
             }
         }
-        printSystemInformation("mqtt connect with name < "+mqttName+" > not found");
+        printSystemInformation("mqtt connect with name < "+device.getMqttName()+" > not found");
         printSystemInformation("device not added");
-        return null;
     }
 
     public Device removeDevice(String deviceName){
@@ -168,15 +256,9 @@ public class User {
         return null;
     }
 
-    public Set<Device> getDevices() {
-        return devices;
-    }
+    //--------------------------------------------------------------------------------------
 
-    public void setDevices(Set<Device> devices) {
-        this.devices = devices;
-    }
-
-    public void sendMessage(String deviceName, String commandName, String... params) {
+    public void useTheDevice(String deviceName, String commandName, String... params) {
         for (Device device : devices){
             if(device.getName().equals(deviceName)){
                 String commandTextForDevice = device.getCommandTextForDevice(commandName,params);
@@ -217,36 +299,20 @@ public class User {
         PrintInformation.addMessageIntoOperationBuffer("-----------------------------------------------");
     }
 
-    public String getLogin() {
-        return login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public int getBufferSize() {
-        return bufferSize;
-    }
-
-    public Map<String, DataFilter> getFilters() {
-        return filters;
-    }
-
-    public void setFilters(Map<String, DataFilter> filters) {
-        this.filters = filters;
-    }
-
     private Set<String> getMqttNames() {
         Set<String> mqttNames = new HashSet<>();
         for (MqttConnect mqttConnect : mqttConnects) {
             mqttNames.add(mqttConnect.getMqttName());
         }
         return mqttNames;
+    }
+
+    private Set<String> getFilterNames() {
+        Set<String> filterNames = new HashSet<>();
+        for (DataFilter dataFilter : filters) {
+            filterNames.add(dataFilter.getName());
+        }
+        return filterNames;
     }
 
     private Set<String> getDeviceNames() {
@@ -279,7 +345,7 @@ public class User {
         userInfo.add("[Buffer size: "+bufferSize+"]");
         userInfo.add("[Resolution print queue: "+resolutionPrint+"]");
         userInfo.add("[Filters included: "+ isFilters +"]");
-        userInfo.add("[Filters: "+ filters.keySet()+"]");
+        userInfo.add("[Filters: "+ getFilterNames()+"]");
         userInfo.add("[Devices: "+ getDeviceNames()+"]");
         userInfo.add("[Mqtt connects: "+ getMqttNames()+"]");
         userInfo.add("------------------------------------------------");
@@ -295,7 +361,7 @@ public class User {
                 "[Buffer size: "+bufferSize+"]"+System.lineSeparator()+
                 "[Resolution print queue: "+resolutionPrint+"]"+System.lineSeparator()+
                 "[Filters included: "+ isFilters +"]"+System.lineSeparator()+
-                "[Filters: "+ filters.keySet()+"]"+System.lineSeparator()+
+                "[Filters: "+ getFilterNames()+"]"+System.lineSeparator()+
                 "[Devices: "+ getDeviceNames()+"]"+System.lineSeparator()+
                 "[Mqtt connects: "+ getMqttNames()+"]"+System.lineSeparator()+
                 "------------------------------------------------";

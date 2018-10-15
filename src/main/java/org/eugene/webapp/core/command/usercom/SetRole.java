@@ -6,7 +6,7 @@ import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class SetRole extends TotalUserCom implements Command {
     public SetRole(UserOperation userOperation) {
@@ -23,7 +23,7 @@ public class SetRole extends TotalUserCom implements Command {
         User user = userOperation.getCurrentUser();
         if(user != null){
             user.setRole(arguments.get(0));
-            userOperation.easyUpdateIntoDB();
+            userOperation.updateUserInDB();
             printSystemInformation("role changed");
         } else {
             printSystemInformation("current user not found !!!");

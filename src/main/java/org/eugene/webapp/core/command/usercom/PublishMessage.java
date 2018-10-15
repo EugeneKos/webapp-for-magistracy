@@ -6,7 +6,7 @@ import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class PublishMessage extends TotalUserCom implements Command {
     public PublishMessage(UserOperation userOperation) {

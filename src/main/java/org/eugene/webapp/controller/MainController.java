@@ -1,6 +1,6 @@
 package org.eugene.webapp.controller;
 
-import org.eugene.webapp.core.parsing.filter.Data;
+import org.eugene.webapp.core.filter.Data;
 import org.eugene.webapp.services.AdminService;
 import org.eugene.webapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ public class MainController {
     public MainController(AdminService adminService, UserService userService) {
         this.adminService = adminService;
         this.userService = userService;
-        adminService.setPathToDB("C:\\Users\\ED.Kosinov\\Documents\\MagistracyProjects\\webapp-for-magistracy\\src\\main\\resources\\db");
         adminService.setPathToScripts("C:\\Users\\ED.Kosinov\\Documents\\MagistracyProjects\\webapp-for-magistracy\\src\\main\\resources\\scripts");
     }
 
@@ -67,21 +66,12 @@ public class MainController {
     public ModelAndView userSend(@RequestParam Map<String, String> requestParams, ModelMap modelMap) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         modelMap.addAttribute("devices",userService.getDevices(authentication.getName()));
-        String mqttBroker = requestParams.get("mqtt");
-        String topic = requestParams.get("topic");
-        String content = requestParams.get("content");
-        userService.sendMessage(authentication.getName(),mqttBroker,topic,content);
-        return new ModelAndView("user");
-    }
-
-    @RequestMapping(value = "/user_device")
-    public ModelAndView userExecuteCommand(@RequestParam Map<String, String> requestParams, ModelMap modelMap) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        modelMap.addAttribute("devices",userService.getDevices(authentication.getName()));
         String deviceName = requestParams.get("deviceName");
         String commandName = requestParams.get("commandName");
-        String[] params = requestParams.get("params").split("\\s+");
-        userService.sendMessage(authentication.getName(),deviceName,commandName,params);
+        if(deviceName != null && commandName != null && requestParams.get("params") != null){
+            String[] params = requestParams.get("params").split("\\s+");
+            userService.useTheDevice(authentication.getName(),deviceName,commandName,params);
+        }
         return new ModelAndView("user");
     }
 

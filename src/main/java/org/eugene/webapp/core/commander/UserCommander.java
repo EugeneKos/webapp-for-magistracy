@@ -17,7 +17,9 @@ public class UserCommander extends Commander {
         addCommand(new RemoveUser(userOperation));
         addCommand(new SelectUser(userOperation));
         addCommand(new AllUsers(userOperation));
-        addCommand(new AddFilter(userOperation));
+        addCommand(new CreateFilter(userOperation));
+        addCommand(new AddFilterIntoUser(userOperation));
+        addCommand(new RemoveFilterFromUser(userOperation));
         addCommand(new RemoveFilter(userOperation));
         addCommand(new UserInfo(userOperation));
         addCommand(new StopLoopPrint(userOperation));
@@ -30,8 +32,12 @@ public class UserCommander extends Commander {
         addCommand(new FilterInfo(userOperation));
         addCommand(new PrintParseDataFilter(userOperation));
         addCommand(new SetPathToScripts(userOperation));
-        addCommand(new AddDevice(userOperation));
+        addCommand(new CreateDevice(userOperation));
+        addCommand(new AddDeviceIntoUser(userOperation));
+        addCommand(new RemoveDeviceFromUser(userOperation));
         addCommand(new RemoveDevice(userOperation));
         addCommand(new DeviceInfo(userOperation));
+        addCommand(new Devices(userOperation));
+        addCommand(new Filters(userOperation));
     }
 }

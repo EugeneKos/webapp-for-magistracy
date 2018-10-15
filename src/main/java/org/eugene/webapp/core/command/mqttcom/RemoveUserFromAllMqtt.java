@@ -7,7 +7,7 @@ import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class RemoveUserFromAllMqtt extends TotalMqttCom implements Command {
     public RemoveUserFromAllMqtt(MqttConnectOperations mqttConnectOperations) {
@@ -25,7 +25,6 @@ public class RemoveUserFromAllMqtt extends TotalMqttCom implements Command {
         User user = userOperation.getUserByLogin(arguments.get(0));
         if(user != null){
             mqttConnectOperations.removeUserFromAllMqtt(user);
-            mqttConnectOperations.saveMqttConnects();
             printSystemInformation("user with login < " +arguments.get(0)+ " > was deleted into all mqtt connects");
         } else {
             printSystemInformation("user with login < " +arguments.get(0)+ " > does not exist");

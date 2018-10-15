@@ -6,7 +6,7 @@ import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class CreateUser extends TotalUserCom implements Command {
     public CreateUser(UserOperation userOperation) {
@@ -22,7 +22,6 @@ public class CreateUser extends TotalUserCom implements Command {
     public void perform() {
         try {
             userOperation.addUser(new User(arguments.get(0),arguments.get(1),arguments.get(2),Integer.parseInt(arguments.get(3))));
-            userOperation.saveUsers();
         } catch (NumberFormatException e){
             printSystemInformation("Input buffer size error!");
         }

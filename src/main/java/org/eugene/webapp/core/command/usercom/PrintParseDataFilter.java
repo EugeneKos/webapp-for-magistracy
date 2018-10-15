@@ -1,13 +1,13 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.parsing.filter.DataFilter;
+import org.eugene.webapp.core.filter.DataFilter;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class PrintParseDataFilter extends TotalUserCom implements Command {
     public PrintParseDataFilter(UserOperation userOperation) {
@@ -24,7 +24,7 @@ public class PrintParseDataFilter extends TotalUserCom implements Command {
         if (arguments.size() == 1) {
             User user = userOperation.getCurrentUser();
             if (user != null) {
-                DataFilter dataFilter = user.getFilters().get(arguments.get(0));
+                DataFilter dataFilter = user.getFilterByName(arguments.get(0));
                 if (dataFilter != null) {
                     dataFilter.setResolutionPrint(true);
                     userOperation.setDataFilter(dataFilter);

@@ -6,7 +6,7 @@ import org.eugene.webapp.core.command.Command;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class Unsubscribe extends TotalMqttCom implements Command {
 
@@ -28,8 +28,7 @@ public class Unsubscribe extends TotalMqttCom implements Command {
         MqttConnect currentMqttConnect = mqttConnectOperations.getCurrentMqttConnect();
         if(currentMqttConnect != null){
             currentMqttConnect.unsubscribe(arguments);
-            mqttConnectOperations.saveMqttConnects();
-            mqttConnectOperations.removeSubscribesFromDB(currentMqttConnect.getMqttName(),arguments);
+            mqttConnectOperations.removeSubscribesFromDB(arguments);
         } else {
             printSystemInformation("mqtt connection does not exist");
         }

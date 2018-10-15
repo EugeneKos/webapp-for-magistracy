@@ -6,7 +6,7 @@ import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class FiltersOnOff extends TotalUserCom implements Command {
     public FiltersOnOff(UserOperation userOperation) {
@@ -15,7 +15,7 @@ public class FiltersOnOff extends TotalUserCom implements Command {
 
     @Override
     public String getName() {
-        return "filters";
+        return "filters-usr";
     }
 
     @Override
@@ -46,6 +46,6 @@ public class FiltersOnOff extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "filters [param on/off]";
+        return "filters-usr [param on/off]";
     }
 }

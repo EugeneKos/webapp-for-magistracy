@@ -18,7 +18,6 @@ public class RemoveUser extends TotalUserCom implements Command {
     @Override
     public void perform() {
         userOperation.removeUser();
-        userOperation.saveUsers();
     }
 
     @Override

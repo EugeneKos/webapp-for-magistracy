@@ -1,14 +1,14 @@
 package org.eugene.webapp.core.command.usercom;
 
 import org.eugene.webapp.core.command.Command;
-import org.eugene.webapp.core.parsing.device.Device;
+import org.eugene.webapp.core.device.Device;
 import org.eugene.webapp.core.user.User;
 import org.eugene.webapp.core.user.UserOperation;
 
 import java.util.List;
 
-import static org.eugene.webapp.core.printer.PrintInformation.addMessagesIntoBuffer;
-import static org.eugene.webapp.core.printer.PrintInformation.printSystemInformation;
+import static org.eugene.webapp.core.utils.PrintInformation.addMessagesIntoBuffer;
+import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
 public class DeviceInfo extends TotalUserCom implements Command {
     public DeviceInfo(UserOperation userOperation) {
@@ -22,15 +22,12 @@ public class DeviceInfo extends TotalUserCom implements Command {
 
     @Override
     public void perform() {
-        User user = userOperation.getCurrentUser();
-        if(user != null){
-            Device device = user.getDeviceByName(arguments.get(0));
-            if(device != null){
-                System.out.println(device);
-                addMessagesIntoBuffer(device.getDeviceInfo());
-            }
+        Device device = userOperation.getDeviceByName(arguments.get(0));
+        if(device != null){
+            System.out.println(device);
+            addMessagesIntoBuffer(device.getDeviceInfo());
         } else {
-            printSystemInformation("user not found !!!");
+            printSystemInformation("device not found");
         }
     }
 
