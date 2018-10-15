@@ -258,7 +258,7 @@ public class User {
 
     //--------------------------------------------------------------------------------------
 
-    public void sendMessage(String deviceName, String commandName, String... params) {
+    public void useTheDevice(String deviceName, String commandName, String... params) {
         for (Device device : devices){
             if(device.getName().equals(deviceName)){
                 String commandTextForDevice = device.getCommandTextForDevice(commandName,params);

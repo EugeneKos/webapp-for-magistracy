@@ -15,14 +15,8 @@
 </head>
 <body>
 <h2>Enter the data to send to the server</h2>
+
     <form action="user" method="post">
-        Mqtt broker <input type="text" name="mqtt" size="30">
-        Topic <input type="text" name="topic" size="40">
-        <p>Content <input type="text" name="content" size="70"></p>
-        <p><input type="submit" value="Send"></p>
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-    </form>
-    <form action="user_device" method="post">
         Device Name <input type="text" name="deviceName" size="15">
         Command Name <input type="text" name="commandName" size="20">
         Params <input type="text" name="params" size="30">

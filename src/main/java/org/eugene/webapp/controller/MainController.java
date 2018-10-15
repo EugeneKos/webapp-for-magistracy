@@ -66,21 +66,12 @@ public class MainController {
     public ModelAndView userSend(@RequestParam Map<String, String> requestParams, ModelMap modelMap) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         modelMap.addAttribute("devices",userService.getDevices(authentication.getName()));
-        String mqttBroker = requestParams.get("mqtt");
-        String topic = requestParams.get("topic");
-        String content = requestParams.get("content");
-        userService.sendMessage(authentication.getName(),mqttBroker,topic,content);
-        return new ModelAndView("user");
-    }
-
-    @RequestMapping(value = "/user_device")
-    public ModelAndView userExecuteCommand(@RequestParam Map<String, String> requestParams, ModelMap modelMap) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        modelMap.addAttribute("devices",userService.getDevices(authentication.getName()));
         String deviceName = requestParams.get("deviceName");
         String commandName = requestParams.get("commandName");
-        String[] params = requestParams.get("params").split("\\s+");
-        userService.sendMessage(authentication.getName(),deviceName,commandName,params);
+        if(deviceName != null && commandName != null && requestParams.get("params") != null){
+            String[] params = requestParams.get("params").split("\\s+");
+            userService.useTheDevice(authentication.getName(),deviceName,commandName,params);
+        }
         return new ModelAndView("user");
     }
 

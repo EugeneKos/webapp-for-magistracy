@@ -36,11 +36,7 @@ public class UserService {
         return userOperation.getUserByLogin(userLogin).getStatusMqttConnects();
     }
 
-    public void sendMessage(String userLogin, String mqttName, String topic, String content){
-        userOperation.getUserByLogin(userLogin).sendMessage(mqttName,topic,content);
-    }
-
-    public void sendMessage(String userLogin, String deviceName, String commandName, String... params){
-        userOperation.getUserByLogin(userLogin).sendMessage(deviceName,commandName,params);
+    public void useTheDevice(String userLogin, String deviceName, String commandName, String... params){
+        userOperation.getUserByLogin(userLogin).useTheDevice(deviceName,commandName,params);
     }
 }
