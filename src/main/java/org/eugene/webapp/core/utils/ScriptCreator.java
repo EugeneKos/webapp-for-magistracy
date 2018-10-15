@@ -20,7 +20,7 @@ public class ScriptCreator {
     private ScriptCreator(){}
 
     private static Document getDocument(String scriptName){
-        File xmlFile = new File(pathToScripts+"/"+scriptName);
+        File xmlFile = new File(pathToScripts+File.separator+scriptName);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         Document document = null;
@@ -38,6 +38,10 @@ public class ScriptCreator {
 
     public static void setPathToScripts(String path){
         pathToScripts = path;
+    }
+
+    public static String getPathToScripts() {
+        return pathToScripts;
     }
 
     private static Element getElement(NodeList nodeList){
