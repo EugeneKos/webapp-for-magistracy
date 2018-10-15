@@ -10,12 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 @Controller
 public class MainController {
@@ -48,11 +50,39 @@ public class MainController {
     @RequestMapping(value = "/admin")
     public ModelAndView adminControl(@RequestParam Map<String, String> requestParams, ModelMap modelMap) {
         String command = requestParams.get("command_text");
-        if(command != null && !command.equals(currentCommand)){
-            List<String> resultCommand = adminService.executeCommand(command);
-            currentCommand = command;
-            modelMap.addAttribute("resultCommand",resultCommand);
+        List<String> resultCommand = new ArrayList<>();
+        if(command != null){
+            if(!command.equals(currentCommand)){
+                resultCommand.addAll(adminService.executeCommand(command));
+                currentCommand = command;
+            } else {
+                resultCommand.add("Same command entered");
+            }
         }
+        modelMap.addAttribute("resultCommand",resultCommand);
+        return new ModelAndView("admin");
+    }
+
+    @RequestMapping(value = "/admin_upload_file")
+    public ModelAndView adminSendFileScript(@RequestParam("file") MultipartFile multipartFile, ModelMap modelMap){
+        List<String> resultCommand = new ArrayList<>();
+        String pathToScript = adminService.getPathToScripts()+ File.separator;
+        try {
+            byte[] bytes = multipartFile.getBytes();
+            if(bytes.length != 0){
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(pathToScript+multipartFile.getOriginalFilename()));
+                bufferedOutputStream.write(bytes);
+                bufferedOutputStream.flush();
+                bufferedOutputStream.close();
+                resultCommand.add("Script file uploaded");
+            } else {
+                resultCommand.add("Script file is not chosen");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            resultCommand.add("Error to upload script file");
+        }
+        modelMap.addAttribute("resultCommand",resultCommand);
         return new ModelAndView("admin");
     }
 

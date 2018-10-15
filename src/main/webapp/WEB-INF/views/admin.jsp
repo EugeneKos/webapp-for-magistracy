@@ -17,6 +17,12 @@
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
 
+    <form action="admin_upload_file" method="post" enctype="multipart/form-data">
+        <input name="file" type="file">
+        <input type="submit" value="Load Script File">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+    </form>
+
     <%
         List<String> resultCommand = null;
 

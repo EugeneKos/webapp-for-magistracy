@@ -40,6 +40,6 @@ public class CreateDevice extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "device-cr [file script name]";
+        return "device-cr [script file name]";
     }
 }
