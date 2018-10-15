@@ -1,4 +1,4 @@
-package org.eugene.webapp.core.mqtt;
+package org.eugene.webapp.core.model.mqtt;
 
 import javax.persistence.*;
 

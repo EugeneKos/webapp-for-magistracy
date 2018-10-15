@@ -1,6 +1,6 @@
 package org.eugene.webapp.core.dao;
 
-import org.eugene.webapp.core.device.Device;
+import org.eugene.webapp.core.model.device.Device;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

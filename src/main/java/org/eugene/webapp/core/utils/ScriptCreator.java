@@ -1,7 +1,7 @@
 package org.eugene.webapp.core.utils;
 
-import org.eugene.webapp.core.device.Device;
-import org.eugene.webapp.core.filter.DataFilter;
+import org.eugene.webapp.core.model.device.Device;
+import org.eugene.webapp.core.model.filter.DataFilter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

@@ -1,13 +1,13 @@
-package org.eugene.webapp.core.user;
+package org.eugene.webapp.core.model.user;
 
 import org.eugene.webapp.core.dao.DataFilterDao;
 import org.eugene.webapp.core.dao.DeviceDao;
 import org.eugene.webapp.core.dao.UserDao;
 import org.eugene.webapp.core.dao.UserNameEntityDao;
-import org.eugene.webapp.core.device.Device;
-import org.eugene.webapp.core.filter.DataFilter;
-import org.eugene.webapp.core.mqtt.MqttConnect;
-import org.eugene.webapp.core.mqtt.UserNameEntity;
+import org.eugene.webapp.core.model.device.Device;
+import org.eugene.webapp.core.model.filter.DataFilter;
+import org.eugene.webapp.core.model.mqtt.MqttConnect;
+import org.eugene.webapp.core.model.mqtt.UserNameEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

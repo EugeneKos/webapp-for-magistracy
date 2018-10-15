@@ -1,7 +1,7 @@
 package org.eugene.webapp.core.command.mqttcom;
 
-import org.eugene.webapp.core.mqtt.MqttConnect;
-import org.eugene.webapp.core.mqtt.MqttConnectOperations;
+import org.eugene.webapp.core.model.mqtt.MqttConnect;
+import org.eugene.webapp.core.model.mqtt.MqttConnectOperations;
 import org.eugene.webapp.core.command.Command;
 import org.eugene.webapp.core.command.StopPrintCommand;
 

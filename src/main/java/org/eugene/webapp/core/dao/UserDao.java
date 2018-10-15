@@ -1,6 +1,6 @@
 package org.eugene.webapp.core.dao;
 
-import org.eugene.webapp.core.user.User;
+import org.eugene.webapp.core.model.user.User;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

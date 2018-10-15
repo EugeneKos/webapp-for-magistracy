@@ -1,8 +1,8 @@
-package org.eugene.webapp.core.mqtt;
+package org.eugene.webapp.core.model.mqtt;
 
 import org.eugene.webapp.core.dao.MqttConnectDao;
-import org.eugene.webapp.core.user.User;
-import org.eugene.webapp.core.user.UserOperation;
+import org.eugene.webapp.core.model.user.User;
+import org.eugene.webapp.core.model.user.UserOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

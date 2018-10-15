@@ -1,9 +1,9 @@
 package org.eugene.webapp.core.command.mqttcom;
 
-import org.eugene.webapp.core.mqtt.MqttConnect;
-import org.eugene.webapp.core.user.User;
-import org.eugene.webapp.core.user.UserOperation;
-import org.eugene.webapp.core.mqtt.MqttConnectOperations;
+import org.eugene.webapp.core.model.mqtt.MqttConnect;
+import org.eugene.webapp.core.model.user.User;
+import org.eugene.webapp.core.model.user.UserOperation;
+import org.eugene.webapp.core.model.mqtt.MqttConnectOperations;
 import org.eugene.webapp.core.command.Command;
 
 import java.util.List;

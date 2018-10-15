@@ -1,8 +1,8 @@
 package org.eugene.webapp.services;
 
-import org.eugene.webapp.core.device.Device;
-import org.eugene.webapp.core.filter.Data;
-import org.eugene.webapp.core.user.UserOperation;
+import org.eugene.webapp.core.model.device.Device;
+import org.eugene.webapp.core.model.filter.Data;
+import org.eugene.webapp.core.model.user.UserOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

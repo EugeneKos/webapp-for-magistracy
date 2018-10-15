@@ -1,9 +1,9 @@
-package org.eugene.webapp.core.mqtt;
+package org.eugene.webapp.core.model.mqtt;
 
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eugene.webapp.core.utils.PrintInformation;
-import org.eugene.webapp.core.user.User;
+import org.eugene.webapp.core.model.user.User;
 
 import javax.persistence.*;
 import java.util.*;

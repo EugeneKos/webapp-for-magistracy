@@ -1,5 +1,5 @@
 <%@ page import="java.util.Set" %>
-<%@ page import="org.eugene.webapp.core.device.Device" %>
+<%@ page import="org.eugene.webapp.core.model.device.Device" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.

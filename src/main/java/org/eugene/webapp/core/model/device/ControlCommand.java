@@ -1,4 +1,4 @@
-package org.eugene.webapp.core.device;
+package org.eugene.webapp.core.model.device;
 
 import javax.persistence.*;
 import java.util.regex.Matcher;

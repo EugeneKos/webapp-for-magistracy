@@ -1,9 +1,9 @@
-package org.eugene.webapp.core.user;
+package org.eugene.webapp.core.model.user;
 
-import org.eugene.webapp.core.device.Device;
-import org.eugene.webapp.core.mqtt.MqttConnect;
-import org.eugene.webapp.core.filter.DataFilter;
-import org.eugene.webapp.core.filter.Data;
+import org.eugene.webapp.core.model.device.Device;
+import org.eugene.webapp.core.model.mqtt.MqttConnect;
+import org.eugene.webapp.core.model.filter.DataFilter;
+import org.eugene.webapp.core.model.filter.Data;
 import org.eugene.webapp.core.utils.PrintInformation;
 
 import javax.persistence.*;

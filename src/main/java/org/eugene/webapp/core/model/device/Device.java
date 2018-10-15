@@ -1,6 +1,6 @@
-package org.eugene.webapp.core.device;
+package org.eugene.webapp.core.model.device;
 
-import org.eugene.webapp.core.user.User;
+import org.eugene.webapp.core.model.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;

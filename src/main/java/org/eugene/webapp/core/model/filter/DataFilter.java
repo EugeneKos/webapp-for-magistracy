@@ -1,7 +1,7 @@
-package org.eugene.webapp.core.filter;
+package org.eugene.webapp.core.model.filter;
 
 import org.eugene.webapp.core.utils.PrintInformation;
-import org.eugene.webapp.core.user.User;
+import org.eugene.webapp.core.model.user.User;
 
 import javax.persistence.*;
 import java.util.*;

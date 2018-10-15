@@ -1,6 +1,6 @@
 package org.eugene.webapp.core.dao;
 
-import org.eugene.webapp.core.filter.DataFilter;
+import org.eugene.webapp.core.model.filter.DataFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

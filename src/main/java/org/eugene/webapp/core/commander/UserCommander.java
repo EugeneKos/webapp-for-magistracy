@@ -1,8 +1,8 @@
 package org.eugene.webapp.core.commander;
 
 import org.eugene.webapp.core.command.usercom.*;
-import org.eugene.webapp.core.mqtt.MqttConnectOperations;
-import org.eugene.webapp.core.user.UserOperation;
+import org.eugene.webapp.core.model.mqtt.MqttConnectOperations;
+import org.eugene.webapp.core.model.user.UserOperation;
 import org.springframework.stereotype.Component;
 
 @Component

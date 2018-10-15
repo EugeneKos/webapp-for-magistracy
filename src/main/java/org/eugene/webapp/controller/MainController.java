@@ -1,6 +1,6 @@
 package org.eugene.webapp.controller;
 
-import org.eugene.webapp.core.filter.Data;
+import org.eugene.webapp.core.model.filter.Data;
 import org.eugene.webapp.services.AdminService;
 import org.eugene.webapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

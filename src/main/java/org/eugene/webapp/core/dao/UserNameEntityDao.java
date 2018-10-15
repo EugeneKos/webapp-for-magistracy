@@ -1,6 +1,6 @@
 package org.eugene.webapp.core.dao;
 
-import org.eugene.webapp.core.mqtt.UserNameEntity;
+import org.eugene.webapp.core.model.mqtt.UserNameEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
