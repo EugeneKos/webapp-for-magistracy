@@ -128,7 +128,7 @@ public class UserOperation {
             deviceDao.persist(device);
             printSystemInformation("device added into data base");
         } else {
-            printSystemInformation("device already exist");
+            printSystemInformation("device already exist in data base");
         }
     }
 
@@ -143,7 +143,7 @@ public class UserOperation {
                 userDao.update(user);
             }
             deviceDao.removeByDeviceName(deviceName);
-            printSystemInformation("device deleted");
+            printSystemInformation("device deleted from data base");
         } else {
             printSystemInformation("device not found");
         }
@@ -176,9 +176,9 @@ public class UserOperation {
     public void addDataFilterIntoDB(DataFilter dataFilter){
         if(getDataFilterByName(dataFilter.getName()) == null){
             dataFilterDao.persist(dataFilter);
-            printSystemInformation("filter added");
+            printSystemInformation("filter added into data base");
         } else {
-            printSystemInformation("filter exist");
+            printSystemInformation("filter exist in data base");
         }
     }
 
@@ -187,13 +187,14 @@ public class UserOperation {
         if(dataFilter != null){
             for (User user : users){
                 user.getFilters().remove(dataFilter);
+                user.getInputData().remove(dataFilterName);
             }
             for (User user : userDao.findAll()){
                 user.getFilters().remove(dataFilter);
                 userDao.update(user);
             }
             dataFilterDao.removeByDataFilterName(dataFilterName);
-            printSystemInformation("filter deleted");
+            printSystemInformation("filter deleted from data base");
         } else {
             printSystemInformation("filter not found");
         }

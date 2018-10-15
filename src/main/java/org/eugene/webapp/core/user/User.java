@@ -142,7 +142,7 @@ public class User {
     public void addFilter(DataFilter dataFilter) {
         String filterName = dataFilter.getName();
         if(filters.add(dataFilter)){
-            printSystemInformation("filter added");
+            printSystemInformation("filter with name < "+filterName+" > added");
         } else {
             printSystemInformation("filter with name < " + filterName + " > already exist");
         }
