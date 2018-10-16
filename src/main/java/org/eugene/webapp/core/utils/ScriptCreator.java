@@ -106,7 +106,7 @@ public class ScriptCreator {
                 String key = getValueFromTagByName("key", element);
                 String beginNonChangeValue = getValueFromTagByName("begin-non-change-value", element);
                 String finalNonChangeValue = getValueFromTagByName("final-non-change-value", element);
-                if(key != null && beginNonChangeValue != null && finalNonChangeValue != null){
+                if(key != null){
                     if(checkChangeElement(dataForFormat,beginNonChangeValue,finalNonChangeValue)){
                         dataFilter.addKeyValueRegexp(key,getRegexp(beginNonChangeValue,finalNonChangeValue));
                         dataFilter = setConverters(dataFilter,element.getElementsByTagName("converter"),key);
@@ -119,21 +119,35 @@ public class ScriptCreator {
 
     private static boolean checkChangeElement(String message, String beginNonChange, String endNonChange){
         int numMatch = 0;
-        Pattern pattern = Pattern.compile(beginNonChange+"(.+)"+endNonChange);
+        Pattern pattern;
+        if(beginNonChange != null && endNonChange == null){
+            pattern = Pattern.compile(beginNonChange+"(.+)");
+        } else if(beginNonChange == null && endNonChange != null) {
+            pattern = Pattern.compile("(.+)"+endNonChange);
+        } else if(beginNonChange != null){ // Оба не равны null
+            pattern = Pattern.compile(beginNonChange+"(.+)"+endNonChange);
+        } else {
+            return true;
+        }
         Matcher matcher = pattern.matcher(message);
         while(matcher.find()){
             String match = matcher.group(1);
             System.out.println("changeable element: "+match);
             numMatch++;
         }
-        if(numMatch == 1){
-            return true;
-        }
-        return false;
+        return numMatch == 1;
     }
 
     private static String getRegexp(String beginNonChange, String endNonChange){
-        return beginNonChange+"(.+)"+endNonChange;
+        if(beginNonChange != null && endNonChange == null){
+            return beginNonChange+"(.+)";
+        } else if(beginNonChange == null && endNonChange != null) {
+            return "(.+)"+endNonChange;
+        } else if (beginNonChange != null){ // Оба не равны null
+            return beginNonChange+"(.+)"+endNonChange;
+        } else {
+            return "(.+)";
+        }
     }
 
     //-----------------------------------------------------------------------------------------------------------

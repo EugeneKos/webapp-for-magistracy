@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<script-creater>
+    <name>filter_2</name>
+    <mqtt name="name_2" topic="JDHT22/Lounge"/>
+    <data-for-format>Lounge temperature: 19.40 C ; Humidity: 93.50%</data-for-format>
+    <key-values>
+        <key>Влажность</key>
+        <begin-non-change-value>Humidity:</begin-non-change-value>
+        <!--<final-non-change-value>\},"activeRFIDProgramName"</final-non-change-value>-->
+    </key-values>
+    <key-values>
+        <key>Температура где-то</key>
+        <begin-non-change-value>Lounge temperature:</begin-non-change-value>
+        <final-non-change-value>; Humidity</final-non-change-value>
+        <converter input="C" output="Градус цельсия"/>
+    </key-values>
+</script-creater>

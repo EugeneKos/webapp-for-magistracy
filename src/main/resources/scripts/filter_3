@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<script-creater>
+    <name>filter_3</name>
+    <mqtt name="name_2" topic="revspace/sensors/humidity"/>
+    <data-for-format>Пофиг</data-for-format>
+    <key-values>
+        <key>Какая-то влажность</key>
+        <!--<begin-non-change-value>radioChannel":</begin-non-change-value>-->
+        <!--<final-non-change-value>\},"activeRFIDProgramName"</final-non-change-value>-->
+        <converter input="%" output="Процент"/>
+    </key-values>
+</script-creater>
