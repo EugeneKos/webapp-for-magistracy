@@ -23,7 +23,6 @@ import java.util.*;
 public class MainController {
     private final AdminService adminService;
     private final UserService userService;
-    private String currentCommand = "";
 
     @Autowired
     public MainController(AdminService adminService, UserService userService) {
@@ -52,12 +51,7 @@ public class MainController {
         String command = requestParams.get("command_text");
         List<String> resultCommand = new ArrayList<>();
         if(command != null){
-            if(!command.equals(currentCommand)){
-                resultCommand.addAll(adminService.executeCommand(command));
-                currentCommand = command;
-            } else {
-                resultCommand.add("Same command entered");
-            }
+            resultCommand.addAll(adminService.executeCommand(command));
         }
         modelMap.addAttribute("resultCommand",resultCommand);
         return new ModelAndView("admin");
@@ -76,7 +70,7 @@ public class MainController {
                 bufferedOutputStream.close();
                 resultCommand.add("Script file uploaded");
             } else {
-                resultCommand.add("Script file is not chosen");
+                resultCommand.add("Script file is not chosen or empty");
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -31,7 +31,6 @@ public class UserCommander extends Commander {
         addCommand(new SetRole(userOperation));
         addCommand(new FilterInfo(userOperation));
         addCommand(new PrintParseDataFilter(userOperation));
-        addCommand(new SetPathToScripts(userOperation));
         addCommand(new CreateDevice(userOperation));
         addCommand(new AddDeviceIntoUser(userOperation));
         addCommand(new RemoveDeviceFromUser(userOperation));
@@ -39,8 +38,11 @@ public class UserCommander extends Commander {
         addCommand(new DeviceInfo(userOperation));
         addCommand(new Devices(userOperation));
         addCommand(new Filters(userOperation));
-        addCommand(new PathToScriptsInfo(userOperation));
-        addCommand(new ScriptFiles(userOperation));
-        addCommand(new RemoveScriptFile(userOperation));
+        addCommand(new SetPathToScripts(userOperation));
+        addCommand(new PathToScripts(userOperation));
+        addCommand(new Files(userOperation));
+        addCommand(new RemoveFile(userOperation));
+        addCommand(new CreateFileDirectory(userOperation));
+        addCommand(new FolderChange(userOperation));
     }
 }

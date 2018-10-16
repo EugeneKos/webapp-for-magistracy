@@ -11,35 +11,45 @@ import static org.eugene.webapp.core.utils.PrintInformation.printCap;
 import static org.eugene.webapp.core.utils.PrintInformation.printFormatInformation;
 import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
-public class ScriptFiles extends TotalUserCom implements Command {
-    public ScriptFiles(UserOperation userOperation) {
+public class Files extends TotalUserCom implements Command {
+    public Files(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "script-files";
+        return "files";
     }
 
     @Override
     public void perform() {
         if(ScriptCreator.getPathToScripts() == null){
-            printSystemInformation("script files path is not specified");
+            printSystemInformation("files path is not specified");
             return;
         }
-        File[] files = new File(ScriptCreator.getPathToScripts()).listFiles();
+        File file = new File(ScriptCreator.getPathToScripts());
+        if(!file.exists()){
+            printSystemInformation("file or directory does not exist");
+            return;
+        }
+        printSystemInformation("current path: "+ScriptCreator.getPathToScripts());
+        File[] files = file.listFiles();
         if(files != null){
             if(files.length == 0){
-                printSystemInformation("script files not found !!!");
+                printSystemInformation("files not found !!!");
                 return;
             }
             printCap();
-            for (File file : files) {
-                printFormatInformation(file.getName());
+            for (File file1 : files) {
+                if(file1.listFiles() != null){
+                    printFormatInformation(file1.getName()+" [d]");
+                } else {
+                    printFormatInformation(file1.getName()+" [f]");
+                }
             }
             printCap();
         } else {
-            printSystemInformation("script files path is not correct");
+            printSystemInformation("the specified path is a file and not a directory");
         }
     }
 
@@ -50,6 +60,6 @@ public class ScriptFiles extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "script-files []";
+        return "files []";
     }
 }

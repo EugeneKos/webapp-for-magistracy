@@ -4,6 +4,7 @@ import org.eugene.webapp.core.command.Command;
 import org.eugene.webapp.core.utils.ScriptCreator;
 import org.eugene.webapp.core.model.user.UserOperation;
 
+import java.io.File;
 import java.util.List;
 
 import static org.eugene.webapp.core.utils.PrintInformation.*;
@@ -15,13 +16,18 @@ public class SetPathToScripts extends TotalUserCom implements Command {
 
     @Override
     public String getName() {
-        return "scripts-path";
+        return "scripts-setpath";
     }
 
     @Override
     public void perform() {
-        ScriptCreator.setPathToScripts(arguments.get(0));
-        printSystemInformation("change path to scripts: "+arguments.get(0));
+        File file = new File(arguments.get(0));
+        if(file.exists()){
+            ScriptCreator.setPathToScripts(arguments.get(0));
+            printSystemInformation("change path to scripts: "+arguments.get(0));
+        } else {
+            printSystemInformation("file or directory does not exist");
+        }
     }
 
     @Override
@@ -35,6 +41,6 @@ public class SetPathToScripts extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "scripts-path [path to scripts]";
+        return "scripts-setpath [path to scripts]";
     }
 }

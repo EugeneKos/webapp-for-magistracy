@@ -8,14 +8,14 @@ import java.util.List;
 
 import static org.eugene.webapp.core.utils.PrintInformation.printSystemInformation;
 
-public class PathToScriptsInfo extends TotalUserCom implements Command {
-    public PathToScriptsInfo(UserOperation userOperation) {
+public class PathToScripts extends TotalUserCom implements Command {
+    public PathToScripts(UserOperation userOperation) {
         super(userOperation);
     }
 
     @Override
     public String getName() {
-        return "scripts-path-info";
+        return "scripts-path";
     }
 
     @Override
@@ -31,6 +31,6 @@ public class PathToScriptsInfo extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "scripts-path-info []";
+        return "scripts-path []";
     }
 }
