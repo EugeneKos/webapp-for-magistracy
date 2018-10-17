@@ -28,7 +28,6 @@ public class MainController {
     public MainController(AdminService adminService, UserService userService) {
         this.adminService = adminService;
         this.userService = userService;
-        adminService.setPathToScripts("C:\\Users\\ED.Kosinov\\Documents\\MagistracyProjects\\webapp-for-magistracy\\src\\main\\resources\\scripts");
     }
 
     @RequestMapping("/login")

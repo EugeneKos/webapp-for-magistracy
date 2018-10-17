@@ -27,7 +27,7 @@ public class RemoveFile extends TotalUserCom implements Command {
         }
         File file = new File(ScriptCreator.getPathToScripts());
         if(!file.exists()){
-            printSystemInformation("file or directory does not exist");
+            printSystemInformation("current file or directory does not exist");
             return;
         }
         File[] files = new File(ScriptCreator.getPathToScripts()).listFiles();

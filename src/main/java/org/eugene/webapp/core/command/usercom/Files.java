@@ -29,7 +29,7 @@ public class Files extends TotalUserCom implements Command {
         }
         File file = new File(ScriptCreator.getPathToScripts());
         if(!file.exists()){
-            printSystemInformation("file or directory does not exist");
+            printSystemInformation("current file or directory does not exist");
             return;
         }
         printSystemInformation("current path: "+ScriptCreator.getPathToScripts());

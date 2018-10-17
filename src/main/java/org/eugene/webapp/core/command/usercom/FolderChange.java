@@ -25,8 +25,12 @@ public class FolderChange extends TotalUserCom implements Command {
             printSystemInformation("files path is not specified");
             return;
         }
+        File file = new File(ScriptCreator.getPathToScripts());
+        if(!file.exists()){
+            printSystemInformation("current file or directory does not exist");
+            return;
+        }
         if(arguments.get(0).equals("..")){
-            File file = new File(ScriptCreator.getPathToScripts());
             String path = file.getParent();
             if(path != null){
                 ScriptCreator.setPathToScripts(path);
@@ -36,7 +40,7 @@ public class FolderChange extends TotalUserCom implements Command {
             }
         } else {
             String path = ScriptCreator.getPathToScripts()+File.separator+arguments.get(0);
-            File file = new File(path);
+            file = new File(path);
             if(file.exists()){
                 ScriptCreator.setPathToScripts(path);
                 printSystemInformation("change path to scripts: "+path);

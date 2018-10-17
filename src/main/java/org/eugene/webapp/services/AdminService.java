@@ -1,6 +1,7 @@
 package org.eugene.webapp.services;
 
 import org.eugene.webapp.core.commander.HandlerCommand;
+import org.eugene.webapp.core.utils.LoadProperties;
 import org.eugene.webapp.core.utils.ScriptCreator;
 import org.eugene.webapp.core.utils.PrintInformation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,16 @@ public class AdminService {
         this.handlerCommand = handlerCommand;
     }
 
+    static {
+        LoadProperties.loadProperties();
+    }
+
     public List<String> executeCommand(String command){
         return handlerCommand.handleCommand(command);
     }
 
     public LinkedList<String> getOperationBuffer(){
         return PrintInformation.getOperationBuffer();
-    }
-
-    public void setPathToScripts(String path){
-        ScriptCreator.setPathToScripts(path);
     }
 
     public String getPathToScripts(){
