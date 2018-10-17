@@ -118,6 +118,7 @@ public class MqttConnect {
 
 
         } catch(MqttException me) {
+            printErrorMqttInform();
             System.out.println("reason "+me.getReasonCode());
             System.out.println("msg "+me.getMessage());
             System.out.println("loc "+me.getLocalizedMessage());
@@ -151,6 +152,7 @@ public class MqttConnect {
             addMessageIntoBuffer("Subscribe to: "+topic);
         } catch (MqttException e) {
             e.printStackTrace();
+            printErrorMqttInform();
         }
     }
 
@@ -164,6 +166,7 @@ public class MqttConnect {
             }
         } catch (MqttException e) {
             e.printStackTrace();
+            printErrorMqttInform();
         }
     }
 
@@ -174,6 +177,7 @@ public class MqttConnect {
             addMessageIntoBuffer("unsubscribe from: "+Arrays.toString(topicFilter));
         } catch (MqttException e) {
             e.printStackTrace();
+            printErrorMqttInform();
         }
     }
 
@@ -186,6 +190,7 @@ public class MqttConnect {
             sampleClient.publish(topic, message);
         } catch (MqttException e) {
             e.printStackTrace();
+            printErrorMqttInform();
         }
         System.out.println("Message published");
         addMessageIntoOperationBuffer("Message published");
@@ -199,6 +204,7 @@ public class MqttConnect {
             addMessageIntoBuffer("Disconnected");
         } catch (MqttException e) {
             e.printStackTrace();
+            printErrorMqttInform();
         }
     }
 
@@ -269,6 +275,12 @@ public class MqttConnect {
             return ""+sampleClient.isConnected();
         }
         return "unknown";
+    }
+
+    private void printErrorMqttInform(){
+        printSystemInformation("mqtt connection < "+mqttName+" > broke the link");
+        printSystemInformation("check internet connection");
+        printSystemInformation("it is recommended to execute commands \"disconnect\" and then \"start\" on this mqtt connection");
     }
 
     private Set<String> getUserNames(){

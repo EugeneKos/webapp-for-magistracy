@@ -165,7 +165,7 @@ public class MqttConnectOperations {
         }
         printCap();
         for (MqttConnect mqttConnect : mqttConnects) {
-            printFormatInformation(mqttConnect.getMqttName());
+            printFormatInformation(mqttConnect.getMqttName()+" : connection status is "+mqttConnect.isConnected());
         }
         printCap();
     }

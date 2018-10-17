@@ -3,16 +3,22 @@ package org.eugene.webapp.core.model.filter;
 import java.util.Map;
 
 public class Data {
+    private final String filterName;
     private final String mqttName;
     private final String topicName;
     private final Map<String, String> keyValues;
     private final String message;
 
-    public Data(String mqttName, String topicName, Map<String, String> keyValues, String message) {
+    public Data(String filterName, String mqttName, String topicName, Map<String, String> keyValues, String message) {
+        this.filterName = filterName;
         this.mqttName = mqttName;
         this.topicName = topicName;
         this.keyValues = keyValues;
         this.message = message;
+    }
+
+    public String getFilterName() {
+        return filterName;
     }
 
     public String getMqttName() {

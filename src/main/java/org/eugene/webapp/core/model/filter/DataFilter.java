@@ -71,7 +71,7 @@ public class DataFilter {
         for (KeyValueRegexp keyValueRegexp : keyValueRegexps){
             map.put(keyValueRegexp.getKey(),convert(keyValueRegexp.getKey(), parse(dirtyData,keyValueRegexp.getValue())));
         }
-        return new Data(mqttName,topicName,map, dirtyData);
+        return new Data(name,mqttName,topicName,map, dirtyData);
     }
 
     private String convert(String key, String input){

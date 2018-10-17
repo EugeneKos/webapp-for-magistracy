@@ -18,9 +18,10 @@
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
     <table>
-        <tr><th>Mqtt Broker</th><th>Topic</th><th>Data with filters</th></tr>
+        <tr><th>Filter name</th><th>Mqtt Broker</th><th>Topic</th><th>Data with filters</th></tr>
         <c:forEach var="data" items="${queue}">
             <tr>
+                <td><c:out value="${data.filterName}"/></td>
                 <td><c:out value="${data.mqttName}"/></td>
                 <td><c:out value="${data.topicName}"/></td>
                 <td><c:out value="${data.keyValues}"/></td>
