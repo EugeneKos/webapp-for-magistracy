@@ -1,13 +1,14 @@
 package org.eugene.webapp.core.commander;
 
 import org.eugene.webapp.core.command.Command;
+import org.eugene.webapp.core.command.CommandContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.eugene.webapp.core.command.Commands.*;
+import static org.eugene.webapp.core.command.Commands.parseComString;
 import static org.eugene.webapp.core.utils.PrintInformation.*;
 
 @Component
@@ -20,23 +21,22 @@ public class HandlerCommand {
     }
 
     public List<String> handleCommand(String command){
-        parseComString(command);
-        callCommand();
+        callCommand(parseComString(command));
         return getResultCommand();
     }
 
-    private void callCommand() {
-        if (getNameSection().equals("")) {
+    private void callCommand(CommandContent commandContent) {
+        if (commandContent.getSectionName().equals("")) {
             callSpecialCommand();
             return;
         }
-        if (!containsSection(getNameSection())) {
+        if (!containsSection(commandContent.getSectionName())) {
             printAllSections();
             return;
         }
-        Command command = controllerCommander.getCommander(getNameSection()).getCommand(getNameCommand());
+        Command command = controllerCommander.getCommander(commandContent.getSectionName()).getCommand(commandContent.getCommandName());
         if (command != null) {
-            if (command.checkArgs(getArguments())) {
+            if (command.checkArgs(commandContent.getArguments())) {
                 command.perform();
             } else {
                 printSystemInformation("incorrect command < incorrect arguments >");

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<script-creater>
+    <name>filter_samsung</name>
+    <mqtt name="samsung" topic="devices/lora/807B859020000224/bme280"/>
+    <data-for-format>{ "data": { "temperature": 28.7, "humidity": 35.8, "pressure": 998 }, "status": { "devEUI" : "807B859020000224", "rssi": -46, "temperature": -10, "battery": 3300, "date": "2017-10-31T16:18:41.664103Z" }}</data-for-format>
+    <key-values>
+        <key>Температура</key>
+        <begin-non-change-value>"data": \{ "temperature":</begin-non-change-value>
+        <final-non-change-value>, "humidity":</final-non-change-value>
+    </key-values>
+    <key-values>
+        <key>Влажность</key>
+        <begin-non-change-value>, "humidity":</begin-non-change-value>
+        <final-non-change-value>, "pressure":</final-non-change-value>
+    </key-values>
+    <key-values>
+        <key>Давление</key>
+        <begin-non-change-value>, "pressure":</begin-non-change-value>
+        <final-non-change-value>\}, "status": \{ "devEUI"</final-non-change-value>
+    </key-values>
+</script-creater>

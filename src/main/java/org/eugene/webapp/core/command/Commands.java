@@ -5,52 +5,46 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Commands {
-    private static List<String> list = new ArrayList<>(10);
-    /**
-     * На вход подается строка с командой
-     * @param command
-     * @return List с распарсенной строкой первый элемент имя секции, второй элемент имя команды
-     * в секции, последующие элементы являются аргументами команд.
-     */
-    public static List<String> parseComString(String command){
-        list.clear();
+public final class Commands {
+    private Commands(){}
+
+    public static CommandContent parseComString(String command){
+        List<String> list = new ArrayList<>(10);
+        CommandContent commandContent = new CommandContent();
         Pattern pattern = Pattern.compile("\\s*(\\S+)");
         Matcher matcher = pattern.matcher(command);
         while(matcher.find()){
             list.add(matcher.group(1));
         }
-        return list;
+        setSectionName(commandContent, list);
+        setCommandName(commandContent, list);
+        setArguments(commandContent, list);
+        return commandContent;
     }
 
-    public static String getNameSection(){
-        String nameSection = "";
+    private static void setSectionName(CommandContent commandContent, List<String> list){
+        String sectionName = "";
         if(!list.isEmpty()){
-            nameSection = list.get(0);
+            sectionName = list.get(0);
         }
-        return nameSection;
+        commandContent.setSectionName(sectionName);
     }
 
-    public static String getNameCommand(){
-        String nameCommand = "";
+    private static void setCommandName(CommandContent commandContent, List<String> list){
+        String commandName = "";
         if(list.size() > 1){
-            nameCommand = list.get(1);
+            commandName = list.get(1);
         }
-        return nameCommand;
+        commandContent.setCommandName(commandName);
     }
 
-    /**
-     * На вход подается List с распарсеной строкой
-     * @param
-     * @return строковый массив аргументов команды.
-     */
-    public static List<String> getArguments(){
+    private static void setArguments(CommandContent commandContent, List<String> list){
         List<String> arguments = new ArrayList<>(10);
         if(list.size() > 2){
             for (int i=2; i<list.size(); i++){
                 arguments.add(list.get(i));
             }
         }
-        return arguments;
+        commandContent.setArguments(arguments);
     }
 }

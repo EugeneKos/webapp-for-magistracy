@@ -27,6 +27,6 @@ public class RemoveUser extends TotalUserCom implements Command {
 
     @Override
     public String getDescriptionCommand() {
-        return "remove";
+        return "remove []";
     }
 }
