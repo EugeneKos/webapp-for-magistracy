@@ -31,5 +31,6 @@ public class MqttCommander extends Commander {
         addCommand(new RemoveUserFromAllMqtt(mqttConnectOperations));
         addCommand(new StartMqttAll(mqttConnectOperations));
         addCommand(new DisconnectMqttAll(mqttConnectOperations));
+        addCommand(new TestMqtt(mqttConnectOperations));
     }
 }
